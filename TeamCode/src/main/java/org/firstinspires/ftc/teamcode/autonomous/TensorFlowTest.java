@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 public class TensorFlowTest extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
-    private static final String LABEL_SKYSTONE = "Skystone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
     private static final String VUFORIA_KEY =
             "AeeJaAf/////AAABmXrchGwLg0pXiPVAgcIM5ayAn2B3H+06gM6QUWQD7yj0kOlTcN/rfpseVxZM53CM79USal/Js9+Pk0iYR2nmNlwP3KHx1DFxjBAhH7409SBhhdYCRdeS3ZL4z5aV0woEL8Iqu5rVQe+4K11b9rUVvdMWj5AUAp/f4HN2Uct2DU56WJhZ+h/DBp3e8vXWU1MdLX0GsitTt7qpshP+uvkwUa8QQ36TBvP0GSyY0Df9O52e2HuAUL9ruQs4h3GZ82i50oRXu20MQ//3XXmBH0y/DMZ0nm8jQ1OIySmEzGAWtXK/e9/I9VRZ2ilT8Sh5rAJoYUG1o64pzNweGPwoRqohYnIoXQ29meA7I6cN3N1U3E7R";
@@ -64,7 +64,7 @@ public class TensorFlowTest extends LinearOpMode {
                         float stone1X = -1;
                         float stone2X = -1;
                         for(Recognition recognition : updatedRecognitions){
-                            if(recognition.getLabel().equals(LABEL_SKYSTONE)){
+                            if(recognition.getLabel().equals(LABEL_SECOND_ELEMENT)){
                                 skyStoneX = recognition.getLeft();
                             }
                             else if(recognition.getLabel().equals(LABEL_FIRST_ELEMENT)){
@@ -118,6 +118,6 @@ public class TensorFlowTest extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minimumConfidence = 0.8;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SKYSTONE);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }
