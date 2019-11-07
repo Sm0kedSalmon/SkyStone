@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.List;
@@ -65,14 +64,14 @@ public class TensorFlowTest extends LinearOpMode {
                         float stone2X = -1;
                         for(Recognition recognition : updatedRecognitions){
                             if(recognition.getLabel().equals(LABEL_SECOND_ELEMENT)){
-                                skyStoneX = recognition.getLeft();
+                                skyStoneX = recognition.getBottom();
                             }
                             else if(recognition.getLabel().equals(LABEL_FIRST_ELEMENT)){
                                 if(stone1X == -1){
-                                    stone1X = recognition.getLeft();
+                                    stone1X = recognition.getBottom();
                                 }
                                 else
-                                    stone2X = recognition.getLeft();
+                                    stone2X = recognition.getBottom();
                             }
                         }
 

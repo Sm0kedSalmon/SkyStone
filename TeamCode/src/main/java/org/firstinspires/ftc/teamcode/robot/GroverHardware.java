@@ -13,6 +13,7 @@ public class GroverHardware {
     HardwareMap hwMap =  null;
 
     public Drivetrain dt = null;
+    public Intake intake = null;
 
     public BNO055IMU imu;
 
@@ -23,7 +24,9 @@ public class GroverHardware {
     //Initializes hardware in each OpMode
     public void init(HardwareMap ahwMap){
         hwMap = ahwMap;
+
         dt = new Drivetrain(hwMap);
+        intake = new Intake(hwMap);
 
         //Set up IMU parameters
         imu = hwMap.get(BNO055IMU.class, "imu");
