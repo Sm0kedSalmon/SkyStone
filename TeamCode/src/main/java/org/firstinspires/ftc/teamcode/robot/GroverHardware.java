@@ -36,6 +36,13 @@ public class GroverHardware {
         imu.initialize(parameters);
     }
 
+    public void initNoGyro(HardwareMap ahwMap){
+        hwMap = ahwMap;
+
+        dt = new Drivetrain(hwMap);
+        intake = new Intake(hwMap);
+    }
+
     //Returns the robot heading in degrees
     public double getHeading(){
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;

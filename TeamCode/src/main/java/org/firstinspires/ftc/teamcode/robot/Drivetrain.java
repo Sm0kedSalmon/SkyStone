@@ -36,11 +36,11 @@ public class Drivetrain {
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        //The motors will run with encoders on
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //The motors will run without encoders on by default
+        FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //When the robot stops, it will stop immediately
         FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
