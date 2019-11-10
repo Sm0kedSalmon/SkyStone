@@ -6,12 +6,10 @@ public class ButtonToggle {
     private boolean toggle;
 
     public boolean getState(boolean state) {
-        lastState = state;
-
         if (state && !lastState)
-            return true;
-        else
-            return false;
+            toggle = !toggle;
+        lastState = state;
+        return toggle;
     }
 
 }

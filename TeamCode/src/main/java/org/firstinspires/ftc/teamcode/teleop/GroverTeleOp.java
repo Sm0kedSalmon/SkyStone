@@ -37,8 +37,7 @@ public class GroverTeleOp extends OpMode {
          *
          * A: PID turn to 90 degrees
          * X: Toggle field centric mode
-         *
-         **/
+         */
 
         double y = -gamepad1.left_stick_y;
         double x = -gamepad1.left_stick_x;

@@ -61,7 +61,6 @@ public class TensorFlowTest extends LinearOpMode {
                         // tells the program the positions of each of the stones
                         float skyStoneX = -1;
                         float stone1X = -1;
-                        float stone2X = -1;
                         for(Recognition recognition : updatedRecognitions){
                             if(recognition.getLabel().equals(LABEL_SECOND_ELEMENT)){
                                 skyStoneX = recognition.getBottom();
@@ -70,8 +69,6 @@ public class TensorFlowTest extends LinearOpMode {
                                 if(stone1X == -1){
                                     stone1X = recognition.getBottom();
                                 }
-                                else
-                                    stone2X = recognition.getBottom();
                             }
                         }
 

@@ -48,6 +48,11 @@ public class GroverHardware {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
-
+    public void gyroTurn(int degrees){
+        while((int)getHeading() != degrees) {
+            double c = dt.gyroTurnCorrection(getHeading(), degrees);
+            dt.setMotorPower(-c, c, -c, c);
+        }
+    }
 
 }

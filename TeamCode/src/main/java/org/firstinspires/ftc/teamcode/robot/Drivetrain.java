@@ -57,7 +57,7 @@ public class Drivetrain {
     }
 
     //Autonomous driving, forwards or backwards.
-    public void driveStraight(double inches, double power, LinearOpMode o){
+    public void driveStraight(double inches, double power){
         int TICKS = (int)(inches * TICKS_PER_INCH);
 
         //Sets the target position.
@@ -74,11 +74,7 @@ public class Drivetrain {
         //Sets the motors to a certain power until the target position is reached.
         setMotorPower(power,power,power,power);
 
-        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){
-            o.telemetry.addData("Target: ", TICKS);
-            o.telemetry.addData("Current left: ", FLMotor.getCurrentPosition());
-            o.telemetry.addData("Power", FLMotor.getPower());
-        }
+        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){}
 
         setMotorPower(0,0,0,0);
 
@@ -120,6 +116,8 @@ public class Drivetrain {
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+
+
     //Represents 1 loop of a gyro turn PID loop. Called repeatedly until the target is reached.
     public double gyroTurnCorrection(double current, double target){
         double error = target - current;
@@ -142,4 +140,6 @@ public class Drivetrain {
         //gets the output value, which is set in the method updatePID()
         return turnToAnglePID.getOutput();
     }
+
+
 }
