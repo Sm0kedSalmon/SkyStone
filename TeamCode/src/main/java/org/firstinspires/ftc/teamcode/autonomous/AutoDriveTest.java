@@ -11,12 +11,11 @@ public class AutoDriveTest extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
 
-        while((int)(robot.getHeading()) < 90 && !isStopRequested()) {
-            double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90);
-            robot.dt.setMotorPower(-c, c, -c, c);
-            telemetry.addData("Output: ", c);
-            telemetry.update();
-        }
+        robot.dt.strafeToPosition(6,0.2);
+
+        //robot.dt.driveAtAngle(4,-10,0.2);
+
+        //robot.gyroTurn(90);
 
         robot.dt.setMotorPower(0,0,0,0);
     }

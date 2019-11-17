@@ -1,0 +1,4 @@
+TODO
+1. Tune the autonomous gyro turn loop so that it doesn't stall at the end but doesn't overshoot
+2. Make autonomous paths for the center stone and left stone
+3. Use EasyOpenCV to code a skystone detector

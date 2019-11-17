@@ -7,14 +7,14 @@ public class Intake {
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
 
-    public static final double INTAKE_POWER = 0.4;
+    public static final double INTAKE_POWER = 0.5;
 
     public Intake(HardwareMap ahwMap){
         intakeLeft = ahwMap.get(DcMotor.class, "IntakeLeft");
         intakeRight = ahwMap.get(DcMotor.class, "IntakeRight");
 
-        intakeLeft.setDirection(DcMotor.Direction.REVERSE);
-        intakeRight.setDirection(DcMotor.Direction.FORWARD);
+        intakeLeft.setDirection(DcMotor.Direction.FORWARD);
+        intakeRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void intakeOn(){

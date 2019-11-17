@@ -50,7 +50,7 @@ public class GroverHardware {
 
     public void gyroTurn(int degrees){
         while((int)getHeading() != degrees) {
-            double c = dt.gyroTurnCorrection(getHeading(), degrees);
+            double c = dt.gyroTurnCorrection(getHeading(), degrees, dt.autoTurnToAnglePID);
             dt.setMotorPower(-c, c, -c, c);
         }
     }

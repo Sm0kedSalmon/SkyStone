@@ -77,7 +77,7 @@ public class FieldCentricTest extends OpMode {
 
         //PID turn to 90 degrees.
         if(gamepad1.a){
-            double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90);
+            double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
             robot.dt.setMotorPower(-c,c,-c,c);
             telemetry.addData("P: ", c);
         }

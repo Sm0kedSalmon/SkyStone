@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 import java.util.Arrays;
 
 @TeleOp
-public class GroverTeleOp extends OpMode {
+public class GroverNoGyro extends OpMode {
 
     GroverHardware robot = new GroverHardware();
 
@@ -17,7 +17,7 @@ public class GroverTeleOp extends OpMode {
     ButtonToggle toggleLeftStick = new ButtonToggle();
 
     public void init(){
-        robot.init(hardwareMap);
+        robot.initNoGyro(hardwareMap);
     }
 
     public void init_loop(){}
@@ -45,21 +45,6 @@ public class GroverTeleOp extends OpMode {
         double turn = gamepad1.right_stick_x;
         double r = Math.hypot(x, y);
 
-        if(toggleX.getState(gamepad1.x)){
-            //gets the robot heading and converts it to radians
-            double gyroAngle = robot.getHeading();
-            gyroAngle *= (Math.PI / 180);
-
-            double joystickAngle = Math.atan2(y, x);
-
-            double robotAngle = joystickAngle - gyroAngle;
-
-            x = Math.cos(robotAngle);
-            y = Math.sin(robotAngle);
-
-            telemetry.addLine("Field Centric ON");
-        }
-
         double FrontLeftVal = r * (y + x) + turn;
         double FrontRightVal = r * (y - x) - turn;
         double BackLeftVal = r * (y - x) + turn;
@@ -82,14 +67,6 @@ public class GroverTeleOp extends OpMode {
         if(gamepad1.right_trigger > 0.5) robot.intake.intakeOn();
         else if(gamepad1.left_trigger > 0.5) robot.intake.intakeReverse();
         else robot.intake.intakeOff();
-
-        if(gamepad1.a){
-            double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
-            robot.dt.setMotorPower(-c,c,-c,c);
-            telemetry.addData("P value: ", c);
-        }
-
-        telemetry.addData("Angle: ", robot.getHeading());
 
     }
 

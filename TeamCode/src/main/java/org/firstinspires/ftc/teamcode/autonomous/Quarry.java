@@ -6,64 +6,52 @@ import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
 @Autonomous
 public class Quarry extends LinearOpMode {
+    public static final double SLOW_SPEED = 0.3;
+    public static final double FAST_SPEED = 0.75;
     GroverHardware robot = new GroverHardware();
     public void runOpMode(){
         robot.init(hardwareMap);
         waitForStart();
-
-        //drive in front of quarry
-        robot.dt.driveStraight(23, 0.5);
-
-        //scanning goes here probably
-
-        //turn to stone
-        robot.gyroTurn(-10);
-
-        //pick up stone
         robot.intake.intakeOn();
-        robot.dt.driveStraight(18, 0.25);
-        sleep(500);
-
-        //move back
-        robot.dt.driveStraight(-16, 0.25);
+        sleep(100);
         robot.intake.intakeOff();
 
-        //turn to face skybridge
-        robot.gyroTurn(90);
+        //drive forward
+        robot.dt.strafeToPosition(10,SLOW_SPEED);
 
-        //go completely under skybridge
-        robot.dt.driveStraight(48, 0.5);
+        //
+        robot.dt.driveToPosition(-12,SLOW_SPEED);
 
-        //release stone
+        robot.gyroTurn(-52);
+
+        //left stone
+        robot.intake.intakeOn();
+        robot.dt.driveToPosition(30,SLOW_SPEED);
+        robot.intake.intakeOff();
+        robot.dt.driveToPosition(-15,SLOW_SPEED);
+
+
+        robot.gyroTurn(0);
+
+        robot.dt.driveToPosition(58,FAST_SPEED);
+        robot.intake.intakeReverse();
+        sleep(200);
+        robot.intake.intakeOff();
+        robot.dt.driveToPosition(-58,FAST_SPEED);
+
+        robot.gyroTurn(-120);
+        robot.intake.intakeOn();
+        robot.dt.driveToPosition(15, SLOW_SPEED);
+        robot.dt.driveToPosition(-15, SLOW_SPEED);
+        robot.intake.intakeOff();
+        robot.gyroTurn(0);
+
+        robot.dt.driveToPosition(58,FAST_SPEED);
         robot.intake.intakeReverse();
         sleep(500);
-
-        //Reverse, reverse!
-        robot.dt.driveStraight(-65,0.5);
-
-        //turn towards second stone
-        robot.gyroTurn(45);
-
-        //pick up second stone
-        robot.intake.intakeOn();
-        robot.dt.driveStraight(18.5, 0.25);
-        sleep(500);
-
-        //move back
-        robot.dt.driveStraight(-18.5, 0.25);
         robot.intake.intakeOff();
 
-        //turn to face skybridge
-        robot.gyroTurn(90);
-
-        //go completely under skybridge
-        robot.dt.driveStraight(65, 0.5);
-
-        //drop off second stone
-        robot.intake.intakeReverse();
-        sleep(500);
-
-        //park
-        robot.dt.driveStraight(-16, 0.5);
+        robot.gyroTurn(0);
+        robot.dt.driveToPosition(-20,FAST_SPEED);
     }
 }
