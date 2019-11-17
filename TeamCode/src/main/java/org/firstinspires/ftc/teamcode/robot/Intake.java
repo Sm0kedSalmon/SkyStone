@@ -17,15 +17,15 @@ public class Intake {
         intakeRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public void intakeOn(){
+    public void on(){
         intakeLeft.setPower(INTAKE_POWER);
         intakeRight.setPower(INTAKE_POWER);
     }
-    public void intakeReverse(){
+    public void reverse(){
         intakeLeft.setPower(-INTAKE_POWER);
         intakeRight.setPower(-INTAKE_POWER);
     }
-    public void intakeOff(){
+    public void off(){
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
     }

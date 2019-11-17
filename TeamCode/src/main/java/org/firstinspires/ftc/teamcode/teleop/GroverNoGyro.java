@@ -64,9 +64,9 @@ public class GroverNoGyro extends OpMode {
         else robot.dt.setMotorPower(FrontLeftVal / 2, FrontRightVal / 2, BackLeftVal / 2, BackRightVal / 2);
 
         //Intake controls
-        if(gamepad1.right_trigger > 0.5) robot.intake.intakeOn();
-        else if(gamepad1.left_trigger > 0.5) robot.intake.intakeReverse();
-        else robot.intake.intakeOff();
+        if(gamepad1.right_trigger > 0.5) robot.intake.on();
+        else if(gamepad1.left_trigger > 0.5) robot.intake.reverse();
+        else robot.intake.off();
 
     }
 

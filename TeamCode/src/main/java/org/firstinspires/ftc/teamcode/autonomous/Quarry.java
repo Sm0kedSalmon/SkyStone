@@ -14,9 +14,9 @@ public class Quarry extends LinearOpMode {
         waitForStart();
 
         //Deploy intake wheels
-        robot.intake.intakeOn();
+        robot.intake.on();
         sleep(100);
-        robot.intake.intakeOff();
+        robot.intake.off();
 
         robot.dt.strafeToPosition(10,SLOW_SPEED);
 
@@ -26,9 +26,9 @@ public class Quarry extends LinearOpMode {
         robot.gyroTurn(-52);
 
         //intakes left stone
-        robot.intake.intakeOn();
+        robot.intake.on();
         robot.dt.driveToPosition(30,SLOW_SPEED);
-        robot.intake.intakeOff();
+        robot.intake.off();
         robot.dt.driveToPosition(-15,SLOW_SPEED);
 
         //turns and moves under skybridge
@@ -36,9 +36,9 @@ public class Quarry extends LinearOpMode {
         robot.dt.driveToPosition(58,FAST_SPEED);
 
         //releases stone
-        robot.intake.intakeReverse();
+        robot.intake.reverse();
         sleep(200);
-        robot.intake.intakeOff();
+        robot.intake.off();
 
         //zooms back
         robot.gyroTurn(0);
@@ -46,16 +46,16 @@ public class Quarry extends LinearOpMode {
 
         //turns towards
         robot.gyroTurn(-120);
-        robot.intake.intakeOn();
+        robot.intake.on();
         robot.dt.driveToPosition(15, SLOW_SPEED);
         robot.dt.driveToPosition(-15, SLOW_SPEED);
-        robot.intake.intakeOff();
+        robot.intake.off();
         robot.gyroTurn(0);
 
         robot.dt.driveToPosition(58,FAST_SPEED);
-        robot.intake.intakeReverse();
+        robot.intake.reverse();
         sleep(500);
-        robot.intake.intakeOff();
+        robot.intake.off();
 
         robot.gyroTurn(0);
         robot.dt.driveToPosition(-20,FAST_SPEED);

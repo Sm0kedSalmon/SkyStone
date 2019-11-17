@@ -83,9 +83,9 @@ public class FieldCentricTest extends OpMode {
         }
 
         //Intake controls
-        if(gamepad1.right_bumper) robot.intake.intakeOn();
-        else if(gamepad1.left_bumper) robot.intake.intakeReverse();
-        else robot.intake.intakeOff();
+        if(gamepad1.right_bumper) robot.intake.on();
+        else if(gamepad1.left_bumper) robot.intake.reverse();
+        else robot.intake.off();
 
         //Telemetry (shows text on the phone)
         //telemetry.addData("Robot heading: ", robot.getHeading());
