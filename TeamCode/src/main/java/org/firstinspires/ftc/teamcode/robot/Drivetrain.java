@@ -15,14 +15,23 @@ public class Drivetrain {
     public static final double WHEEL_DIAMETER_INCHES = 3.93701; // Will change depending on wheel
     public static final double TICKS_PER_INCH = (TICKS_PER_MOTOR_REV) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
+    public static final double TICKS_PER_ROBOT_ROTATION = 3375;
+    public static final double TICKS_PER_DEGREE = TICKS_PER_ROBOT_ROTATION / 360;
+
     public DcMotor FLMotor;
     public DcMotor FRMotor;
     public DcMotor BLMotor;
     public DcMotor BRMotor;
 
     //PID values need to be tuned
-    public PID turnToAnglePID = new PID(0.0003,0,0);
-    public PID autoTurnToAnglePID = new PID(0.007,0.0001,0);
+    public PID turnToAnglePID = new PID(0.005,0,0);
+
+    //TODO: test each set of values to see which one sucks the least
+    //public PID autoTurnToAnglePID = new PID(0.015,0.0003,0.01);
+    //public PID autoTurnToAnglePID = new PID(0.04,0,0.4);
+    //public PID autoTurnToAnglePID = new PID(0.012,0.0002,0.0275);
+    //public PID autoTurnToAnglePID = new PID(0.005,0.0002,0.02);
+    public PID autoTurnToAnglePID = new PID(0.009,0,0);
 
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
@@ -113,55 +122,6 @@ public class Drivetrain {
         BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
-    //this no work
-    public void driveAtAngle(double xInches, double yInches, double power){
-        int xTICKS = (int)(xInches * TICKS_PER_INCH);
-        int yTICKS = (int)(yInches * TICKS_PER_INCH);
-
-        int FLDistance = yTICKS + xTICKS;
-        int FRDistance = yTICKS - xTICKS;
-        int BLDistance = yTICKS - xTICKS;
-        int BRDistance = yTICKS + xTICKS;
-
-        //Sets the target position.
-        FLMotor.setTargetPosition(FLMotor.getCurrentPosition() + FLDistance);
-        FRMotor.setTargetPosition(FRMotor.getCurrentPosition() + FRDistance);
-        BLMotor.setTargetPosition(BLMotor.getCurrentPosition() + BLDistance);
-        BRMotor.setTargetPosition(BRMotor.getCurrentPosition() + BRDistance);
-
-        //converting x and y to the unit circle (normalize x and y)
-        double angle = Math.atan(yInches / xInches);
-        double nX = Math.cos(angle);
-        double nY = Math.sin(angle);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if(Math.abs(FLDistance) > Math.abs(FRDistance)) {
-            setMotorPower(power, (FRDistance / FLDistance) * power, (BLDistance / FLDistance) * power, power);
-
-            while (FLMotor.isBusy()) {}
-        }
-        else if(Math.abs(FLDistance) < Math.abs(FRDistance)){
-            setMotorPower((FLDistance / FRDistance) * power, power, power, (BRDistance / FRDistance) * power);
-
-            while (FRMotor.isBusy()) {}
-        }
-        else{
-
-        }
-        setMotorPower(0,0,0,0);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-
 
     //Represents 1 loop of a gyro turn PID loop. Called repeatedly until the target is reached.
     public double gyroTurnCorrection(double current, double target, PID pid){

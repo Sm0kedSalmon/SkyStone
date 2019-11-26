@@ -68,6 +68,24 @@ public class GroverNoGyro extends OpMode {
         else if(gamepad1.left_trigger > 0.5) robot.intake.reverse();
         else robot.intake.off();
 
+        //Lift controls
+
+        if(gamepad1.dpad_up) robot.lift.stageUp();
+        else if(gamepad1.dpad_down) robot.lift.stageDown();
+        if (gamepad1.y && robot.lift.getPosition() < robot.lift.MAX_HEIGHT){
+            robot.lift.up();
+        }
+        else if (gamepad1.a && robot.lift.getPosition() > robot.lift.HOME_POSITION){
+            robot.lift.down();
+        }
+        else
+            robot.lift.positionCorrection();
+
+        if(gamepad1.left_stick_button){
+            robot.lift.resetEncoder();
+        }
+
+        telemetry.addData("Lift position:", robot.lift.getPosition());
     }
 
 }

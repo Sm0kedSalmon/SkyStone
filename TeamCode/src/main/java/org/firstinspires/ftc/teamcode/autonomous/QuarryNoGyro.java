@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
 @Autonomous
-public class Quarry extends LinearOpMode {
+public class QuarryNoGyro extends LinearOpMode {
     public static final double SLOW_SPEED = 0.3;
     public static final double FAST_SPEED = 0.75;
     GroverHardware robot = new GroverHardware();
@@ -23,7 +23,7 @@ public class Quarry extends LinearOpMode {
         robot.dt.driveToPosition(-12,SLOW_SPEED);
 
         //turn towards leftmost stone
-        robot.gyroTurnPID(-52);
+        robot.encoderTurn(-52, SLOW_SPEED);
 
         //intakes left stone
         robot.intake.on();
@@ -34,7 +34,8 @@ public class Quarry extends LinearOpMode {
         telemetry.addData("Heading: ", robot.getHeading());
 
         //turns and moves under skybridge
-        robot.gyroTurnPID(0);
+        robot.encoderTurn(0, SLOW_SPEED);
+
         robot.dt.driveToPosition(58,FAST_SPEED);
 
         //releases stone
@@ -43,23 +44,23 @@ public class Quarry extends LinearOpMode {
         robot.intake.off();
 
         //zooms back
-        robot.gyroTurnPID(0);
+        robot.encoderTurn(0, SLOW_SPEED);
         robot.dt.driveToPosition(-58,FAST_SPEED);
 
         //picks up second stone
-        robot.gyroTurnPID(-120);
+        robot.encoderTurn(-120, SLOW_SPEED);
         robot.intake.on();
         robot.dt.driveToPosition(15, SLOW_SPEED);
         robot.dt.driveToPosition(-15, SLOW_SPEED);
         robot.intake.off();
-        robot.gyroTurnPID(0);
+        robot.encoderTurn(0, SLOW_SPEED);
 
         robot.dt.driveToPosition(58,FAST_SPEED);
         robot.intake.reverse();
         sleep(500);
         robot.intake.off();
 
-        robot.gyroTurnPID(0);
+        robot.encoderTurn(0, SLOW_SPEED);
         robot.dt.driveToPosition(-20,FAST_SPEED);
     }
 }

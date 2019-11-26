@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.misc;
 
 import com.qualcomm.robotcore.util.Range;
 
+
+
 /*
 Framework for all PID loops.
 Instead of writing a new method, make a new instance of the PID class.
@@ -102,4 +104,23 @@ public class PID
         return outputValue;
     }
 
+    public void setKp(double kp){
+        this.Kp = kp;
+    }
+    public void setKi(double ki){
+        this.Ki = ki;
+    }
+    public void setKd(double kd){
+        this.Kd = kd;
+    }
+
+    public double getKp(){
+        return Kp;
+    }
+    public double getKi(){
+        return Ki;
+    }
+    public double getKd(){
+        return Kd;
+    }
 }

@@ -4,18 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
-@Autonomous(name="test")
+@Autonomous
 public class AutoDriveTest extends LinearOpMode {
     GroverHardware robot = new GroverHardware();
     public void runOpMode(){
         robot.init(hardwareMap);
         waitForStart();
 
-        robot.dt.strafeToPosition(6,0.2);
-
-        //robot.dt.driveAtAngle(4,-10,0.2);
-
-        //robot.gyroTurn(90);
+        robot.encoderTurn(50,0.5);
+        robot.encoderTurn(0,0.5);
 
         robot.dt.setMotorPower(0,0,0,0);
     }

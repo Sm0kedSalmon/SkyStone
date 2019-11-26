@@ -92,6 +92,7 @@ public class FieldCentricTest extends OpMode {
         telemetry.addData("Right joystick", gamepad1.right_stick_x);
         telemetry.addData("Turn", turn);
         telemetry.addData("FLPower", FLPower);
+        telemetry.addData("Left motor position", robot.dt.FLMotor.getCurrentPosition());
 
 
     }
