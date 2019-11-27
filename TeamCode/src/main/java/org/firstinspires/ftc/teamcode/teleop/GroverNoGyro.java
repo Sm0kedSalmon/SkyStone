@@ -13,8 +13,8 @@ public class GroverNoGyro extends OpMode {
 
     GroverHardware robot = new GroverHardware();
 
-    ButtonToggle toggleX = new ButtonToggle();
-    ButtonToggle toggleLeftStick = new ButtonToggle();
+    ButtonToggle dpadUp = new ButtonToggle();
+    ButtonToggle dpadDown = new ButtonToggle();
 
     public void init(){
         robot.initNoGyro(hardwareMap);
@@ -36,8 +36,13 @@ public class GroverNoGyro extends OpMode {
          * Right bumper: move intake
          * Left bumper: reverse intake
          *
-         * A: PID turn to 90 degrees
-         * X: Toggle field centric mode
+         * Y: move lift up
+         * A: move lift down
+         *
+         * Dpad up: move lift to the set position above the current one
+         * Dpad down: move lift to the set position below the current one
+         *
+         * Left stick button: reset lift
          */
 
         double y = -gamepad1.left_stick_y;
@@ -70,22 +75,26 @@ public class GroverNoGyro extends OpMode {
 
         //Lift controls
 
-        if(gamepad1.dpad_up) robot.lift.stageUp();
-        else if(gamepad1.dpad_down) robot.lift.stageDown();
-        if (gamepad1.y && robot.lift.getPosition() < robot.lift.MAX_HEIGHT){
+        //chaning the set position
+        if(dpadUp.buttonPressed(gamepad1.dpad_up)) robot.lift.stageUp();
+        else if(dpadDown.buttonPressed(gamepad1.dpad_down)) robot.lift.stageDown();
+
+        //manual controls
+        if (gamepad1.y && robot.lift.getPosition() < robot.lift.MAX_HEIGHT)
             robot.lift.up();
-        }
-        else if (gamepad1.a && robot.lift.getPosition() > robot.lift.HOME_POSITION){
+        else if (gamepad1.a && robot.lift.getPosition() > robot.lift.HOME_POSITION)
             robot.lift.down();
-        }
-        else
-            robot.lift.positionCorrection();
 
-        if(gamepad1.left_stick_button){
+        //if the lift isn't being controlled manually, it automatically goes to the set position
+        else robot.lift.positionCorrection();
+
+        if(gamepad1.left_stick_button)
             robot.lift.resetEncoder();
-        }
 
-        telemetry.addData("Lift position:", robot.lift.getPosition());
+
+        telemetry.addData("Lift encoder position:", robot.lift.getPosition());
+        telemetry.addData("Lift target position:", robot.lift.getCurrentTargetPosition());
+
     }
 
 }

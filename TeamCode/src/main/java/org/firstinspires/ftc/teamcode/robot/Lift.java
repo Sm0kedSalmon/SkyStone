@@ -37,15 +37,17 @@ public class Lift {
     public void stop(){
         liftMotor.setPower(0);
     }
+
     public double getPosition(){
         return liftMotor.getCurrentPosition();
     }
+
     public void resetEncoder(){
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     public void stageUp() {
-        if(currentPosition < 5){
+        if(currentPosition < 4){
             currentPosition += 1;
         }
     }
@@ -58,5 +60,8 @@ public class Lift {
         double error = positions[currentPosition] - getPosition();
 
         liftMotor.setPower(error * 0.0005);
+    }
+    public double getCurrentTargetPosition(){
+        return positions[currentPosition];
     }
 }
