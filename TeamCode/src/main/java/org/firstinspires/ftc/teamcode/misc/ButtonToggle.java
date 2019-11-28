@@ -19,6 +19,7 @@ public class ButtonToggle {
             lastState = state;
             return true;
         }
+        lastState = state;
         return false;
     }
 
