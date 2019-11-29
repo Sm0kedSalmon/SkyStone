@@ -23,7 +23,7 @@ public class QuarryNoGyro extends LinearOpMode {
         robot.dt.driveToPosition(-12,SLOW_SPEED);
 
         //turn towards leftmost stone
-        robot.encoderTurn(-52, SLOW_SPEED);
+        robot.dt.encoderTurn(-52, SLOW_SPEED);
 
         //intakes left stone
         robot.intake.on();
@@ -34,7 +34,7 @@ public class QuarryNoGyro extends LinearOpMode {
         telemetry.addData("Heading: ", robot.getHeading());
 
         //turns and moves under skybridge
-        robot.encoderTurn(0, SLOW_SPEED);
+        robot.dt.encoderTurn(52, SLOW_SPEED);
 
         robot.dt.driveToPosition(58,FAST_SPEED);
 
@@ -44,23 +44,23 @@ public class QuarryNoGyro extends LinearOpMode {
         robot.intake.off();
 
         //zooms back
-        robot.encoderTurn(0, SLOW_SPEED);
         robot.dt.driveToPosition(-58,FAST_SPEED);
 
         //picks up second stone
-        robot.encoderTurn(-120, SLOW_SPEED);
+        robot.dt.encoderTurn(-120, SLOW_SPEED);
         robot.intake.on();
         robot.dt.driveToPosition(15, SLOW_SPEED);
         robot.dt.driveToPosition(-15, SLOW_SPEED);
         robot.intake.off();
-        robot.encoderTurn(0, SLOW_SPEED);
+        robot.dt.encoderTurn(120, SLOW_SPEED);
 
+        //drops off second stone
         robot.dt.driveToPosition(58,FAST_SPEED);
         robot.intake.reverse();
         sleep(500);
         robot.intake.off();
 
-        robot.encoderTurn(0, SLOW_SPEED);
+        //parks
         robot.dt.driveToPosition(-20,FAST_SPEED);
     }
 }

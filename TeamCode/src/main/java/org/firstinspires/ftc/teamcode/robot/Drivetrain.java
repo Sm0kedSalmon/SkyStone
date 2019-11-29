@@ -68,6 +68,10 @@ public class Drivetrain {
         BRMotor.setPower(br);
     }
 
+    public void resetEncoders(){
+
+    }
+
     //Autonomous driving, forwards or backwards.
     public void driveToPosition(double inches, double power){
         int TICKS = (int)(inches * TICKS_PER_INCH);
@@ -112,6 +116,32 @@ public class Drivetrain {
 
         //Sets the motors to a certain power until the target position is reached.
         setMotorPower(power,-power,-power,power);
+
+        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){}
+
+        setMotorPower(0,0,0,0);
+
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void encoderTurn(double angle, double power){
+
+        //Sets the target position.
+        FLMotor.setTargetPosition((int)(FLMotor.getCurrentPosition() - angle * TICKS_PER_DEGREE));
+        FRMotor.setTargetPosition((int)(FRMotor.getCurrentPosition() + angle * TICKS_PER_DEGREE));
+        BLMotor.setTargetPosition((int)(BLMotor.getCurrentPosition() - angle * TICKS_PER_DEGREE));
+        BRMotor.setTargetPosition((int)(BRMotor.getCurrentPosition() + angle * TICKS_PER_DEGREE));
+
+        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Sets the motors to a certain power until the target position is reached.
+        setMotorPower(-power,power,-power,power);
 
         while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){}
 

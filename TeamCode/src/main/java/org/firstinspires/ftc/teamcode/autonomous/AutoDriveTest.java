@@ -11,8 +11,8 @@ public class AutoDriveTest extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
 
-        robot.encoderTurn(50,0.5);
-        robot.encoderTurn(0,0.5);
+        robot.dt.encoderTurn(50,0.5);
+        robot.dt.encoderTurn(0,0.5);
 
         robot.dt.setMotorPower(0,0,0,0);
     }

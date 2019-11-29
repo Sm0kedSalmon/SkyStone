@@ -65,30 +65,6 @@ public class GroverHardware {
         dt.setMotorPower(0,0,0,0);
     }
 
-    public void encoderTurn(double angle, double power){
-        double error = angle - getHeading();
-        //Sets the target position.
-        dt.FLMotor.setTargetPosition((int)(dt.FLMotor.getCurrentPosition() - error * dt.TICKS_PER_DEGREE));
-        dt.FRMotor.setTargetPosition((int)(dt.FRMotor.getCurrentPosition() + error * dt.TICKS_PER_DEGREE));
-        dt.BLMotor.setTargetPosition((int)(dt.BLMotor.getCurrentPosition() - error * dt.TICKS_PER_DEGREE));
-        dt.BRMotor.setTargetPosition((int)(dt.BRMotor.getCurrentPosition() + error * dt.TICKS_PER_DEGREE));
 
-        dt.FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        dt.FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        dt.BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        dt.BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Sets the motors to a certain power until the target position is reached.
-        dt.setMotorPower(-power,power,-power,power);
-
-        while(dt.FLMotor.isBusy() && dt.FRMotor.isBusy() && dt.BLMotor.isBusy() && dt.BRMotor.isBusy()){}
-
-        dt.setMotorPower(0,0,0,0);
-
-        dt.FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        dt.FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        dt.BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        dt.BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 
 }
