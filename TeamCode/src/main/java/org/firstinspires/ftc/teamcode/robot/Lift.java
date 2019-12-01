@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
 
+import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.misc.PID;
 
 public class Lift {
@@ -11,13 +13,19 @@ public class Lift {
 
     public static double HOME_POSITION = 0;
 
-    public static double BLOCK_HEIGHT = 0;
-
     public static double LIFT_POWER = 1;
 
-    public static double MAX_HEIGHT = 5400;
+    //public static double MAX_HEIGHT = RobotConstants.LIFT_MAX_POSITION;
+    public static double MAX_HEIGHT = 5000;
 
-    public static double[] positions = {0,1000,2000,3000,4000};
+    /*public static int[] positions = {RobotConstants.LIFT_HOME_POSITION,
+            RobotConstants.LIFT_FIRST_STAGE,
+            RobotConstants.LIFT_SECOND_STAGE,
+            RobotConstants.LIFT_THIRD_STAGE,
+            RobotConstants.LIFT_FOURTH_STAGE,
+            RobotConstants.LIFT_FIFTH_STAGE};*/
+
+    public static int[] positions = {0,0,0,0,0,0};
 
     private int currentPosition = 0;
 

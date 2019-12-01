@@ -30,7 +30,7 @@ public class PIDTuner extends OpMode {
         if(gamepad1.a){
             double target = (int)robot.getHeading() + 90;
             while((int)robot.getHeading() != target && !gamepad1.b) {
-                double c = robot.dt.gyroTurnCorrection(robot.getHeading(), target, robot.dt.autoTurnToAnglePID);
+                double c = robot.dt.gyroTurnCorrection(robot.getHeading(), target, robot.dt.turnToAnglePID);
                 robot.dt.setMotorPower(-c, c, -c, c);
             }
             robot.dt.setMotorPower(0,0,0,0);
@@ -41,24 +41,24 @@ public class PIDTuner extends OpMode {
         }
         if(gamepad1.dpad_up){
             if(gamepad1.left_trigger > 0.5){
-                robot.dt.autoTurnToAnglePID.setKp(robot.dt.autoTurnToAnglePID.getKp() + 0.001);
+                robot.dt.turnToAnglePID.setKp(robot.dt.turnToAnglePID.getKp() + 0.001);
             }
             else {
-                robot.dt.autoTurnToAnglePID.setKp(robot.dt.autoTurnToAnglePID.getKp() + 0.0001);
+                robot.dt.turnToAnglePID.setKp(robot.dt.turnToAnglePID.getKp() + 0.0001);
             }
         }
 
         else if(gamepad1.dpad_down){
             if(gamepad1.left_trigger > 0.5){
-                robot.dt.autoTurnToAnglePID.setKp(robot.dt.autoTurnToAnglePID.getKp() - 0.01);
+                robot.dt.turnToAnglePID.setKp(robot.dt.turnToAnglePID.getKp() - 0.01);
             }
             else {
-                robot.dt.autoTurnToAnglePID.setKp(robot.dt.autoTurnToAnglePID.getKp() - 0.001);
+                robot.dt.turnToAnglePID.setKp(robot.dt.turnToAnglePID.getKp() - 0.001);
             }
         }
-        telemetry.addData("Kp: ", robot.dt.autoTurnToAnglePID.getKp());
-        telemetry.addData("Ki: ", robot.dt.autoTurnToAnglePID.getKi());
-        telemetry.addData("Kd: ", robot.dt.autoTurnToAnglePID.getKd());
+        telemetry.addData("Kp: ", robot.dt.turnToAnglePID.getKp());
+        telemetry.addData("Ki: ", robot.dt.turnToAnglePID.getKi());
+        telemetry.addData("Kd: ", robot.dt.turnToAnglePID.getKd());
         telemetry.addData("Angle: ", robot.getHeading());
 
     }

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.misc.PID;
 
 import java.util.Arrays;
@@ -24,15 +25,8 @@ public class Drivetrain {
     public DcMotor BRMotor;
 
     //PID values need to be tuned
-    public PID turnToAnglePID = new PID(0.005,0,0);
-
-    //TODO: test each set of values to see which one sucks the least
-    //public PID autoTurnToAnglePID = new PID(0.015,0.0003,0.01);
-    //public PID autoTurnToAnglePID = new PID(0.04,0,0.4);
-    //public PID autoTurnToAnglePID = new PID(0.012,0.0002,0.0275);
-    //public PID autoTurnToAnglePID = new PID(0.005,0.0002,0.02);
-    public PID autoTurnToAnglePID = new PID(0.009,0,0);
-
+    //public PID turnToAnglePID = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
+    public PID turnToAnglePID = new PID(0,0,0);
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
         FLMotor  = ahwMap.get(DcMotor.class, "FLMotor");

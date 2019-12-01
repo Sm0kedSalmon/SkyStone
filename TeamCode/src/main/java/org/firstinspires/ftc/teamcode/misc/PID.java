@@ -10,7 +10,7 @@ Instead of writing a new method, make a new instance of the PID class.
 */
 public class PID
 {
-    private double target, current, Kp, Ki, Kd, totalError, totalErrorMin, totalErrorMax, lastError, outputValue;
+    private double target, current, Kp, Ki, Kd, totalError, totalErrorMin, totalErrorMax, lastError, outputValue, previousTime, currentTime;
 
     //Constructor
     public PID(double Kp, double Ki, double Kd, double totalErrorMin, double totalErrorMax)
@@ -27,7 +27,7 @@ public class PID
         totalError = 0;
 
         totalError = Range.clip(totalError, totalErrorMin, totalErrorMax);
-
+        previousTime = 0;
     }
     //Constructor without total error constraints
     public PID(double Kp, double Ki, double Kd)
@@ -40,16 +40,20 @@ public class PID
         current = 0;
         lastError = 0;
         totalError = 0;
-
+        previousTime = 0;
     }
     //Takes in the current value and uses methods P, I, and D to get an output value.
     public void updatePID(double currentValue)
     {
+        currentTime = System.currentTimeMillis();
+
         current = currentValue;
         outputValue = P() + I() + D();
 
         lastError = currentError();
         totalError += currentError();
+
+        previousTime = currentTime;
     }
 
     //Sets the target value
@@ -71,9 +75,9 @@ public class PID
     }
 
     //Gets the difference between the error from the last loop and the error from this loop
-    public double errorDifference()
-    {
-        return currentError() - lastError;
+    public double errorDifference() {
+        double dt = currentTime - previousTime;
+        return (currentError() - lastError) / dt;
     }
 
     //Update the P, I, and D values
