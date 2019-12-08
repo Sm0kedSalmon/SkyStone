@@ -45,7 +45,8 @@ public class PID
     //Takes in the current value and uses methods P, I, and D to get an output value.
     public void updatePID(double currentValue)
     {
-        currentTime = System.currentTimeMillis();
+        //current time in seconds
+        currentTime = System.currentTimeMillis() / 1000.0;
 
         current = currentValue;
         outputValue = P() + I() + D();

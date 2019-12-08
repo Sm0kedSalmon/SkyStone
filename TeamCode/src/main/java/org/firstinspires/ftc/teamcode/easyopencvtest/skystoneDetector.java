@@ -37,22 +37,22 @@ import java.util.List;
  */
 @Autonomous(name= "opencvSkystoneDetector", group="Sky autonomous")
 
-public class boltsOfSteelProgram extends LinearOpMode {
+public class skystoneDetector extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
     //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
-    private static int valMid = -1;
-    private static int valLeft = -1;
-    private static int valRight = -1;
+    public static int valMid = -1;
+    public static int valLeft = -1;
+    public static int valRight = -1;
 
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
 
-    private static float offsetX = RobotConstants.OFFSET_X / 8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
-    private static float offsetY = RobotConstants.OFFSET_Y / 8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
+    private static float offsetX = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
+    private static float offsetY = 1f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
-    private static float[] midPos = {4f/8f+offsetX, 4f/8f+offsetY};//0 = col, 1 = row
+    private static float[] midPos = {4f/8f+offsetX, 4f/8f+offsetY};;//0 = col, 1 = row
     private static float[] leftPos = {2f/8f+offsetX, 4f/8f+offsetY};
     private static float[] rightPos = {6f/8f+offsetX, 4f/8f+offsetY};
     //moves all rectangles right or left by amount. units are in ratio to monitor
@@ -65,6 +65,7 @@ public class boltsOfSteelProgram extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         phoneCam.openCameraDevice();//open camera
@@ -76,21 +77,30 @@ public class boltsOfSteelProgram extends LinearOpMode {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
+            //updateOffsets();
             telemetry.addData("Values", valLeft+"   "+valMid+"   "+valRight);
             telemetry.addData("Height", rows);
             telemetry.addData("Width", cols);
 
+            //telemetry.addData("Offset X:", RobotConstants.OFFSET_X);
+            //telemetry.addData("Offset Y:", RobotConstants.OFFSET_Y);
             telemetry.update();
             sleep(100);
-            //call movement functions
-//            strafe(0.4, 200);
-//            moveDistance(0.4, 700);
 
         }
     }
 
+    /*public void updateOffsets(){
+        offsetX = RobotConstants.OFFSET_X;
+        offsetY = RobotConstants.OFFSET_Y;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
+
+        midPos = new float[]{4f/8f+offsetX, 4f/8f+offsetY};//0 = col, 1 = row
+        leftPos = new float[]{2f/8f+offsetX, 4f/8f+offsetY};
+        rightPos = new float[]{6f/8f+offsetX, 4f/8f+offsetY};
+    }*/
+
     //detection pipeline
-    static class StageSwitchingPipeline extends OpenCvPipeline
+    public static class StageSwitchingPipeline extends OpenCvPipeline
     {
         Mat yCbCrChan2Mat = new Mat();
         Mat thresholdMat = new Mat();

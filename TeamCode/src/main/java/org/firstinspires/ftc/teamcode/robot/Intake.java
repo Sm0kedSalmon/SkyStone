@@ -8,6 +8,7 @@ public class Intake {
     public DcMotor intakeRight;
 
     public static final double INTAKE_POWER = 0.5;
+    public static final double INTAKE_POWER_SLOW = 0.25;
 
     public Intake(HardwareMap ahwMap){
         intakeLeft = ahwMap.get(DcMotor.class, "IntakeLeft");
@@ -22,8 +23,8 @@ public class Intake {
         intakeRight.setPower(INTAKE_POWER);
     }
     public void reverse(){
-        intakeLeft.setPower(-INTAKE_POWER);
-        intakeRight.setPower(-INTAKE_POWER);
+        intakeLeft.setPower(-INTAKE_POWER_SLOW);
+        intakeRight.setPower(-INTAKE_POWER_SLOW);
     }
     public void off(){
         intakeLeft.setPower(0);

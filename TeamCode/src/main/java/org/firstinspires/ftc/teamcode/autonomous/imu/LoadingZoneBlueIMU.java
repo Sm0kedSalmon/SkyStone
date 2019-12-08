@@ -1,16 +1,47 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.imu;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
+import org.firstinspires.ftc.teamcode.easyopencvtest.skystoneDetector;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
 
 @Autonomous
-public class Quarry extends LinearOpMode {
+@Disabled
+public class LoadingZoneBlueIMU extends LinearOpMode {
     public static final double SLOW_SPEED = 0.3;
     public static final double FAST_SPEED = 0.75;
+
+    OpenCvCamera phoneCam;
+
+    private final int rows = 640;
+    private final int cols = 480;
+
     GroverHardware robot = new GroverHardware();
     public void runOpMode(){
+        double skystonePosition = 0;
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        phoneCam.openCameraDevice();//open camera
+        phoneCam.setPipeline(new skystoneDetector.StageSwitchingPipeline());//different stages
+        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
+
         robot.init(hardwareMap);
+
+        while(!isStarted()) {
+            if (skystoneDetector.valLeft == 0) skystonePosition = 0;
+            else if (skystoneDetector.valMid == 0) skystonePosition = 1;
+            else skystonePosition = 2;
+        }
+
         waitForStart();
 
         //Deploy intake wheels
@@ -39,7 +70,7 @@ public class Quarry extends LinearOpMode {
 
         //releases stone
         robot.intake.reverse();
-        sleep(200);
+        sleep((long)RobotConstants.OUTTAKE_TIME);
         robot.intake.off();
 
         //zooms back
@@ -56,7 +87,7 @@ public class Quarry extends LinearOpMode {
 
         robot.dt.driveToPosition(58,FAST_SPEED);
         robot.intake.reverse();
-        sleep(500);
+        sleep((long)RobotConstants.OUTTAKE_TIME);
         robot.intake.off();
 
         robot.gyroTurnPID(0);

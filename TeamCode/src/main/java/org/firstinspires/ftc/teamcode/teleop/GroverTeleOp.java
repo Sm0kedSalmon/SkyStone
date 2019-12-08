@@ -15,7 +15,10 @@ public class GroverTeleOp extends OpMode {
     GroverHardware robot = new GroverHardware();
 
     ButtonToggle toggleX = new ButtonToggle();
+    ButtonToggle toggleX2 = new ButtonToggle();
     ButtonToggle toggleLeftStick = new ButtonToggle();
+
+    private double angleOffset = 90;
 
     public void init(){
         robot.init(hardwareMap);
@@ -23,7 +26,13 @@ public class GroverTeleOp extends OpMode {
         robot.dt.FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void init_loop(){}
+    public void init_loop(){
+        if(gamepad1.x) angleOffset = 90;
+        else if(gamepad1.b) angleOffset = -90;
+
+        telemetry.addData("Angle offset", angleOffset);
+        telemetry.update();
+    }
 
     public void start(){}
 
@@ -32,15 +41,17 @@ public class GroverTeleOp extends OpMode {
         /**
          * CONTROLS:
          *
+         * GAMEPAD 1
          * Left joystick: moving around
          * Right joystick: turning in place
          * Right trigger: slow mode
+         * X: Toggle field centric mode
          *
+         * GAMEPAD 2
          * Right bumper: move intake
          * Left bumper: reverse intake
+         * X: Toggle foundation gripper
          *
-         * A: PID turn to 90 degrees
-         * X: Toggle field centric mode
          */
 
         //gets the inputs from both joysticks
@@ -52,9 +63,10 @@ public class GroverTeleOp extends OpMode {
         double r = Math.hypot(x, y);
 
         //Pressing X switches from regular mode to field centric mode
+        //If not in field centric mode, skips everything in the if method
         if(toggleX.getState(gamepad1.x)){
             //gets the robot heading and converts it to radians
-            double gyroAngle = robot.getHeading();
+            double gyroAngle = robot.getHeading() + angleOffset;
             gyroAngle *= (Math.PI / 180);
 
             double joystickAngle = Math.atan2(y, x);
@@ -75,7 +87,7 @@ public class GroverTeleOp extends OpMode {
         double BackLeftVal = r * (y - x) + turn;
         double BackRightVal = r * (y + x) - turn;
 
-        //if a wheel power is greater than 1, normalizes all of the wheel powers
+        //if a wheel power is greater than 1, divides each wheel power by the highest one
         double[] wheelPowers = {FrontRightVal, FrontLeftVal, BackLeftVal, BackRightVal};
         Arrays.sort(wheelPowers);
         if(wheelPowers[3] > 1){
@@ -88,18 +100,30 @@ public class GroverTeleOp extends OpMode {
         //Left bumper activates quarter speed. Otherwise, goes at half speed.
         if (gamepad1.left_bumper)
             robot.dt.setMotorPower(FrontLeftVal / 4, FrontRightVal / 4, BackLeftVal / 4, BackRightVal / 4);
-        else robot.dt.setMotorPower(FrontLeftVal / 2, FrontRightVal / 2, BackLeftVal / 2, BackRightVal / 2);
+        else robot.dt.setMotorPower(FrontLeftVal, FrontRightVal, BackLeftVal, BackRightVal);
 
         //Intake controls
-        if(gamepad1.right_trigger > 0.5) robot.intake.on();
-        else if(gamepad1.left_trigger > 0.5) robot.intake.reverse();
+        if(gamepad2.right_trigger > 0.5) robot.intake.on();
+        else if(gamepad2.left_trigger > 0.5) robot.intake.reverse();
         else robot.intake.off();
 
         //Holding the A button uses a PID loop to gradually turn to 90 degrees.
-        if(gamepad1.a){
+        /*if(gamepad1.a){
             double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
             robot.dt.setMotorPower(-c,c,-c,c);
             telemetry.addData("Motor output: ", c);
+        }*/
+
+        if(toggleX2.getState(gamepad2.x)){
+            robot.gripper.grab();
+        }
+        else{
+            robot.gripper.reset();
+        }
+
+        //reset angle
+        if(toggleLeftStick.buttonPressed(gamepad1.left_stick_button)){
+            angleOffset = robot.getHeading();
         }
 
         //Send data to the driver station

@@ -16,6 +16,7 @@ public class GroverHardware {
     public Drivetrain dt = null;
     public Intake intake = null;
     public Lift lift = null;
+    public FoundationGripper gripper = null;
 
     public BNO055IMU imu;
 
@@ -30,6 +31,7 @@ public class GroverHardware {
         dt = new Drivetrain(hwMap);
         intake = new Intake(hwMap);
         lift = new Lift(hwMap);
+        gripper = new FoundationGripper(hwMap);
 
         //Set up IMU parameters
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -46,6 +48,7 @@ public class GroverHardware {
         dt = new Drivetrain(hwMap);
         intake = new Intake(hwMap);
         lift = new Lift(hwMap);
+        gripper = new FoundationGripper(hwMap);
     }
 
     //Returns the robot heading in degrees

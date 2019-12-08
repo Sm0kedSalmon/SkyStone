@@ -121,6 +121,53 @@ public class Drivetrain {
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void diagonalDriveNE(double inches, double power){
+        int TICKS = (int)(inches * TICKS_PER_INCH);
+
+        //Sets the target position.
+        FLMotor.setTargetPosition(FLMotor.getCurrentPosition() + TICKS);
+        BRMotor.setTargetPosition(BRMotor.getCurrentPosition() + TICKS);
+
+        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Sets the motors to a certain power until the target position is reached.
+        setMotorPower(power,0,0,power);
+
+        while(FLMotor.isBusy() && BRMotor.isBusy()){}
+
+        setMotorPower(0,0,0,0);
+
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void diagonalDriveNW(double inches, double power){
+        int TICKS = (int)(inches * TICKS_PER_INCH);
+
+        //Sets the target position.
+
+        FRMotor.setTargetPosition(FRMotor.getCurrentPosition() + TICKS);
+        BLMotor.setTargetPosition(BLMotor.getCurrentPosition() + TICKS);
+
+        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Sets the motors to a certain power until the target position is reached.
+        setMotorPower(0,power,power,0);
+
+        while(FRMotor.isBusy() && BLMotor.isBusy()){}
+
+        setMotorPower(0,0,0,0);
+
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public void encoderTurn(double angle, double power){
 
         //Sets the target position.
