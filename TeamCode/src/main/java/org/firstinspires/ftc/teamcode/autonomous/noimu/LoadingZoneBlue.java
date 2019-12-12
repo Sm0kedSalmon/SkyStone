@@ -31,12 +31,12 @@ public class LoadingZoneBlue extends LinearOpMode {
         phoneCam.setPipeline(new skystoneDetector.StageSwitchingPipeline());//different stages
         phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
 
-        robot.init(hardwareMap);
+        robot.initNoGyro(hardwareMap);
 
         while(!isStarted()) {
-            if (skystoneDetector.valLeft == 0) skystonePosition = 0;
-            else if (skystoneDetector.valMid == 0) skystonePosition = 1;
-            else skystonePosition = 2;
+            if (skystoneDetector.valLeft == 0) skystonePosition = 0; //left
+            else if (skystoneDetector.valMid == 0) skystonePosition = 1; //center
+            else skystonePosition = 2; //right
             telemetry.addData("Position", skystonePosition);
             telemetry.update();
         }

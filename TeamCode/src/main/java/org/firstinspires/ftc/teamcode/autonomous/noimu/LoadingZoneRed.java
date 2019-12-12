@@ -33,7 +33,7 @@ public class LoadingZoneRed extends LinearOpMode {
         phoneCam.setPipeline(new skystoneDetector.StageSwitchingPipeline());//different stages
         phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
 
-        robot.init(hardwareMap);
+        robot.initNoGyro(hardwareMap);
 
         while(!isStarted()) {
             if (skystoneDetector.valLeft == 0) skystonePosition = 2;

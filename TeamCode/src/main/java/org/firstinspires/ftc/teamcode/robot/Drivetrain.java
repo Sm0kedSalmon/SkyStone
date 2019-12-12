@@ -26,7 +26,10 @@ public class Drivetrain {
 
     //PID values need to be tuned
     //public PID turnToAnglePID = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
-    public PID turnToAnglePID = new PID(0,0,0);
+
+    public PID turnToAnglePID = new PID(0.015,0.000095,0.002);
+    public PID teleOpTurnToAnglePID = new PID(0.02,0,0.0015);
+    public PID headingCorrectionPID = new PID(RobotConstants.CORRECTION_KP,RobotConstants.CORRECTION_KI,RobotConstants.CORRECTION_KD);
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
         FLMotor  = ahwMap.get(DcMotor.class, "FLMotor");
@@ -63,7 +66,22 @@ public class Drivetrain {
     }
 
     public void resetEncoders(){
+        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void disableEncoders(){
+        FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     //Autonomous driving, forwards or backwards.
@@ -195,7 +213,7 @@ public class Drivetrain {
     }
 
     //Represents 1 loop of a gyro turn PID loop. Called repeatedly until the target is reached.
-    public double gyroTurnCorrection(double current, double target, PID pid){
+    public double gyroPIDCorrection(double current, double target, PID pid){
         double error = target - current;
 
         //if the error is greater than 180, we know it has to cross the 180 -180 boundary, so we switch to a 0-360 scale

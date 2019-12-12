@@ -64,10 +64,7 @@ public class PID
     }
 
     //Gets the difference between the target value and the current value
-    public double currentError()
-    {
-        return target - current;
-    }
+    public double currentError(){ return target - current; }
 
     //Gets the total error for the entire action
     public double totalError()
@@ -109,23 +106,8 @@ public class PID
         return outputValue;
     }
 
-    public void setKp(double kp){
-        this.Kp = kp;
-    }
-    public void setKi(double ki){
-        this.Ki = ki;
-    }
-    public void setKd(double kd){
-        this.Kd = kd;
-    }
-
-    public double getKp(){
-        return Kp;
-    }
-    public double getKi(){
-        return Ki;
-    }
-    public double getKd(){
-        return Kd;
+    public void reset(){
+        lastError = 0;
+        totalError = 0;
     }
 }

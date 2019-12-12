@@ -17,13 +17,15 @@ public class GyroTurnTest extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
 
-        while(robot.getHeading() != 90 && !isStopRequested()) {
-            double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
+        /*while(robot.getHeading() != 90 && !isStopRequested()) {
+            double c = robot.dt.gyroPIDCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
             robot.dt.setMotorPower(-c, c, -c, c);
             packet.put("Error", robot.dt.turnToAnglePID.getTarget() - robot.dt.turnToAnglePID.getCurrent());
             dashboard.sendTelemetryPacket(packet);
-        }
-            robot.dt.setMotorPower(0,0,0,0);
+        }*/
+
+        //turn to center skystone
+        robot.gyroTurnPID(90);
 
 
     }

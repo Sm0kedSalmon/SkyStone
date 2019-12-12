@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -19,6 +21,11 @@ public class GroverHardware {
     public FoundationGripper gripper = null;
 
     public BNO055IMU imu;
+
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    TelemetryPacket packet = new TelemetryPacket();
+
+    public ElapsedTime time = new ElapsedTime();
 
     public GroverHardware(){
 
@@ -56,16 +63,18 @@ public class GroverHardware {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
-    public void resetHeading(){
-
-    }
-
     public void gyroTurnPID(int degrees){
-        while(Math.abs(getHeading() - degrees) > 0.1) {
-            double c = dt.gyroTurnCorrection(getHeading(), degrees, dt.turnToAnglePID);
+        dt.disableEncoders();
+        dt.turnToAnglePID.reset();
+        time.reset();
+        while(getHeading() != degrees  && time.seconds() < 2) {
+            double c = dt.gyroPIDCorrection(getHeading(), degrees, dt.turnToAnglePID);
             dt.setMotorPower(-c, c, -c, c);
+            packet.put("Error", dt.turnToAnglePID.getTarget() - dt.turnToAnglePID.getCurrent());
+            dashboard.sendTelemetryPacket(packet);
         }
         dt.setMotorPower(0,0,0,0);
+        dt.resetEncoders();
     }
 
 

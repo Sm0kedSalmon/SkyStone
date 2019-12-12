@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,16 +20,22 @@ public class GroverTeleOp extends OpMode {
     ButtonToggle toggleX2 = new ButtonToggle();
     ButtonToggle toggleLeftStick = new ButtonToggle();
 
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    TelemetryPacket packet = new TelemetryPacket();
+
     private double angleOffset = 90;
+
+    private double currentTargetAngle;
 
     public void init(){
         robot.init(hardwareMap);
-        robot.dt.FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.dt.FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        currentTargetAngle = robot.getHeading();
     }
 
     public void init_loop(){
-        if(gamepad1.x) angleOffset = 90;
+        if(gamepad1.x){
+            angleOffset = 90;
+        }
         else if(gamepad1.b) angleOffset = -90;
 
         telemetry.addData("Angle offset", angleOffset);
@@ -62,6 +70,11 @@ public class GroverTeleOp extends OpMode {
         //r is the total joystick displacement
         double r = Math.hypot(x, y);
 
+        //if the robot is turning, it updates the current target angle.
+        currentTargetAngle = turn > 0  || r < 0.01|| gamepad1.a ? robot.getHeading() : currentTargetAngle;
+
+
+
         //Pressing X switches from regular mode to field centric mode
         //If not in field centric mode, skips everything in the if method
         if(toggleX.getState(gamepad1.x)){
@@ -87,6 +100,29 @@ public class GroverTeleOp extends OpMode {
         double BackLeftVal = r * (y - x) + turn;
         double BackRightVal = r * (y + x) - turn;
 
+        //Holding the A button uses a PID loop to gradually turn to 90 degrees.
+        if(gamepad1.a){
+            double c = robot.dt.gyroPIDCorrection(robot.getHeading(), 90, robot.dt.teleOpTurnToAnglePID);
+            robot.dt.setMotorPower(-c,c,-c,c);
+            FrontLeftVal -= c;
+            FrontRightVal += c;
+            BackLeftVal -= c;
+            BackRightVal += c;
+
+            telemetry.addData("Motor output: ", c);
+        }
+
+        //Otherwise, corrects the heading. (tune this so it's more accurate)
+        else if(r > 0.01){
+            double c = robot.dt.gyroPIDCorrection(robot.getHeading(), currentTargetAngle, robot.dt.headingCorrectionPID);
+            FrontLeftVal -= c;
+            FrontRightVal += c;
+            BackLeftVal -= c;
+            BackRightVal += c;
+
+            telemetry.addData("Correction power: ", c);
+        }
+
         //if a wheel power is greater than 1, divides each wheel power by the highest one
         double[] wheelPowers = {FrontRightVal, FrontLeftVal, BackLeftVal, BackRightVal};
         Arrays.sort(wheelPowers);
@@ -102,17 +138,14 @@ public class GroverTeleOp extends OpMode {
             robot.dt.setMotorPower(FrontLeftVal / 4, FrontRightVal / 4, BackLeftVal / 4, BackRightVal / 4);
         else robot.dt.setMotorPower(FrontLeftVal, FrontRightVal, BackLeftVal, BackRightVal);
 
+
+
         //Intake controls
         if(gamepad2.right_trigger > 0.5) robot.intake.on();
         else if(gamepad2.left_trigger > 0.5) robot.intake.reverse();
         else robot.intake.off();
 
-        //Holding the A button uses a PID loop to gradually turn to 90 degrees.
-        /*if(gamepad1.a){
-            double c = robot.dt.gyroTurnCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
-            robot.dt.setMotorPower(-c,c,-c,c);
-            telemetry.addData("Motor output: ", c);
-        }*/
+
 
         if(toggleX2.getState(gamepad2.x)){
             robot.gripper.grab();
@@ -126,9 +159,16 @@ public class GroverTeleOp extends OpMode {
             angleOffset = robot.getHeading();
         }
 
+
+
         //Send data to the driver station
         telemetry.addData("Angle: ", robot.getHeading());
-        telemetry.addData("Left motor position", robot.dt.FLMotor.getCurrentPosition());
+        telemetry.update();
+
+        packet.put("Heading", robot.getHeading());
+        packet.put("Target heading", currentTargetAngle);
+        dashboard.sendTelemetryPacket(packet);
+        dashboard.sendTelemetryPacket(packet);
     }
 
 }

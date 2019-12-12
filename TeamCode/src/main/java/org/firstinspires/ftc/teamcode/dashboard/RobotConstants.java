@@ -5,9 +5,13 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class RobotConstants {
     //PID tuning values
-    /*public static double GYRO_TURN_KP = 0.02;
-    public static double GYRO_TURN_KI = 0.0001;
-    public static double GYRO_TURN_KD = 0.00254;*/
+    public static double GYRO_TURN_KP = 0.015;
+    public static double GYRO_TURN_KI = 0;
+    public static double GYRO_TURN_KD = 0;
+
+    public static double CORRECTION_KP = 0.001;
+    public static double CORRECTION_KI = 0;
+    public static double CORRECTION_KD = 0;
 
 
 

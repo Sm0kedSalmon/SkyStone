@@ -149,6 +149,7 @@ public class skystoneDetector extends LinearOpMode {
             //color diff cb.
             //lower cb = more blue = skystone = white
             //higher cb = less blue = yellow stone = grey
+            //ycbcr
             Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
             Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
 
@@ -162,13 +163,13 @@ public class skystoneDetector extends LinearOpMode {
 
 
             //get values from frame
-            double[] pixMid = thresholdMat.get((int)(input.rows()* midPos[1]), (int)(input.cols()* midPos[0]));//gets value at circle
+            double[] pixMid = thresholdMat.get((int)(input.rows()* midPos[1]), (int)(input.cols()* midPos[0]));//gets value at point
             valMid = (int)pixMid[0];
 
-            double[] pixLeft = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at circle
+            double[] pixLeft = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at point
             valLeft = (int)pixLeft[0];
 
-            double[] pixRight = thresholdMat.get((int)(input.rows()* rightPos[1]), (int)(input.cols()* rightPos[0]));//gets value at circle
+            double[] pixRight = thresholdMat.get((int)(input.rows()* rightPos[1]), (int)(input.cols()* rightPos[0]));//gets value at point
             valRight = (int)pixRight[0];
 
             //create three points
