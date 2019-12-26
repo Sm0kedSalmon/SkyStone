@@ -13,8 +13,11 @@ public class GroverNoGyro extends OpMode {
 
     GroverHardware robot = new GroverHardware();
 
-    ButtonToggle dpadUp = new ButtonToggle();
-    ButtonToggle dpadDown = new ButtonToggle();
+    ButtonToggle toggleDpadUp = new ButtonToggle();
+    ButtonToggle toggleDpadDown = new ButtonToggle();
+
+    ButtonToggle toggleX = new ButtonToggle();
+    ButtonToggle toggleB = new ButtonToggle();
 
     public void init(){
         robot.initNoGyro(hardwareMap);
@@ -76,23 +79,36 @@ public class GroverNoGyro extends OpMode {
         //Lift controls
 
         //chaning the set position
-        if(dpadUp.buttonPressed(gamepad1.dpad_up)) robot.lift.stageUp();
-        else if(dpadDown.buttonPressed(gamepad1.dpad_down)) robot.lift.stageDown();
+        if(toggleDpadUp.buttonPressed(gamepad1.dpad_up)) robot.lift.stageUp();
+        else if(toggleDpadDown.buttonPressed(gamepad1.dpad_down)) robot.lift.stageDown();
 
         //manual controls
-        if (gamepad1.y && robot.lift.getPosition() < robot.lift.MAX_HEIGHT)
+        if (gamepad1.y && robot.lift.getMotorPosition() < robot.lift.MAX_HEIGHT)
             robot.lift.up();
-        else if (gamepad1.a && robot.lift.getPosition() > robot.lift.HOME_POSITION)
+        else if (gamepad1.a && robot.lift.getMotorPosition() > robot.lift.HOME_POSITION)
             robot.lift.down();
 
         //if the lift isn't being controlled manually, it automatically goes to the set position
         else robot.lift.positionCorrection();
 
+        //reset lift encoders
         if(gamepad1.left_stick_button)
             robot.lift.resetEncoder();
 
+        //skystone grabber
+        if(toggleX.getState(gamepad1.x))
+            robot.lift.grabSkystone();
 
-        telemetry.addData("Lift encoder position:", robot.lift.getPosition());
+        else
+            robot.lift.releaseSkystone();
+
+        //grabber arm
+        if(toggleB.getState(gamepad1.b))
+            robot.lift.moveOutsideRobot();
+        else
+            robot.lift.moveInsideRobot();
+
+        telemetry.addData("Lift encoder position:", robot.lift.getMotorPosition());
         telemetry.addData("Lift target position:", robot.lift.getCurrentTargetPosition());
 
     }

@@ -25,11 +25,11 @@ public class Drivetrain {
     public DcMotor BRMotor;
 
     //PID values need to be tuned
-    //public PID turnToAnglePID = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
-
-    public PID turnToAnglePID = new PID(0.015,0.000095,0.002);
+    public PID turnToAnglePIDTest = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
+    public PID turnToAnglePID = new PID(0.0125,0.00001,0.0004);
+    //public PID turnToAngleN90 = new PID(0,0,0);
     public PID teleOpTurnToAnglePID = new PID(0.02,0,0.0015);
-    public PID headingCorrectionPID = new PID(RobotConstants.CORRECTION_KP,RobotConstants.CORRECTION_KI,RobotConstants.CORRECTION_KD);
+
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
         FLMotor  = ahwMap.get(DcMotor.class, "FLMotor");
@@ -102,7 +102,9 @@ public class Drivetrain {
         //Sets the motors to a certain power until the target position is reached.
         setMotorPower(power,power,power,power);
 
-        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){}
+        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){
+            //correction method
+        }
 
         setMotorPower(0,0,0,0);
 
@@ -212,28 +214,38 @@ public class Drivetrain {
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    //Represents 1 loop of a gyro turn PID loop. Called repeatedly until the target is reached.
+    //Represents 1 loop of a gyro turn PID loop or correction PID loop. Called repeatedly until the target is reached.
     public double gyroPIDCorrection(double current, double target, PID pid){
         double error = target - current;
 
         //if the error is greater than 180, we know it has to cross the 180 -180 boundary, so we switch to a 0-360 scale
         //this is called an "angle wrap"
         if(Math.abs(error) > 180){
-            //normalize angles
             current = (current + 360) % 360;
             target = (target + 360) % 360;
-
-            error = target - current;
         }
 
         //resets the target in case it's changed
         pid.setTarget(target);
 
-        //does calculations
+        //does calculations using PID controller
         pid.updatePID(current);
 
         //gets the output value, which is set in the method updatePID()
         return pid.getOutput();
+    }
+
+
+
+    public double[] normalizePowers(double[] powers){
+        Arrays.sort(powers);
+        if(powers[3] > 1){
+            powers[0] /= powers[3];
+            powers[1] /= powers[3];
+            powers[2] /= powers[3];
+            powers[3] /= powers[3];
+        }
+        return powers;
     }
 
 

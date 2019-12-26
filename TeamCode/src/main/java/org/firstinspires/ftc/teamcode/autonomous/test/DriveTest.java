@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
-@Autonomous(name = "Gyro Turn Test", group="Test")
-public class GyroTurnTest extends LinearOpMode {
+@Autonomous(name = "Regular Drive Test", group="Test")
+public class DriveTest extends LinearOpMode {
     GroverHardware robot = new GroverHardware();
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -19,15 +19,13 @@ public class GyroTurnTest extends LinearOpMode {
         robot.init(hardwareMap);
         robot.dt.resetEncoders();
         waitForStart();
-        //Math.abs(robot.getHeading() - RobotConstants.TARGET_ANGLE) > RobotConstants.THRESHOLD
-        while(!isStopRequested() && Math.abs(robot.getHeading() - RobotConstants.TARGET_ANGLE) > RobotConstants.THRESHOLD) {
-            double c = robot.dt.gyroPIDCorrection(robot.getHeading(), RobotConstants.TARGET_ANGLE, robot.dt.turnToAnglePIDTest);
-            robot.dt.setMotorPower(-c, c, -c, c);
 
-            packet.put("Current angle", robot.getHeading());
-            packet.put("Error", robot.dt.turnToAnglePIDTest.getTarget() - robot.dt.turnToAnglePIDTest.getCurrent());
-            dashboard.sendTelemetryPacket(packet);
-        }
+        robot.dt.driveToPosition(30, 0.5);
+        telemetry.addData("Heading offset", robot.getHeading());
+        telemetry.update();
+        sleep(500);
+        //robot.dt.driveToPosition(-50, 0.5);
+
 
         //turn to center skystone
         //robot.gyroTurnPID(90);

@@ -1,39 +1,46 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.robot.Robot;
-
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
-import org.firstinspires.ftc.teamcode.misc.PID;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Lift {
     public DcMotor liftMotor;
 
     public static double HOME_POSITION = 0;
-
     public static double LIFT_POWER = 1;
-
     //public static double MAX_HEIGHT = RobotConstants.LIFT_MAX_POSITION;
     public static double MAX_HEIGHT = 5000;
-
-    /*public static int[] positions = {RobotConstants.LIFT_HOME_POSITION,
+    /*public static int[] positions = {0,
             RobotConstants.LIFT_FIRST_STAGE,
             RobotConstants.LIFT_SECOND_STAGE,
             RobotConstants.LIFT_THIRD_STAGE,
             RobotConstants.LIFT_FOURTH_STAGE,
             RobotConstants.LIFT_FIFTH_STAGE};*/
+    public static int[] positions = {0,543,1783,2600,3317,4034};
+    public int currentPosition = 0;
 
-    public static int[] positions = {0,0,0,0,0,0};
 
-    private int currentPosition = 0;
+    public Servo skystoneGrabber;
+    public static double GRAB_POSITION = 1;
+    public static double RELEASE_POSITION = 0;
+
+    public Servo rotator;
+    public static double LOAD_POSITION = 0.85;
+    public static double STACK_POSITION = 0.14;
+    public static double MIN_ROTATE_POSITION = 2500;
 
     public Lift(HardwareMap ahwMap){
         liftMotor = ahwMap.get(DcMotor.class, "lift");
-        liftMotor.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        skystoneGrabber = ahwMap.get(Servo.class, "skystone_grabber");
+        skystoneGrabber.setPosition(RELEASE_POSITION);
+
+        rotator = ahwMap.get(Servo.class, "rotating_arm");
+        rotator.setPosition(LOAD_POSITION);
     }
 
     public void up(){
@@ -46,7 +53,7 @@ public class Lift {
         liftMotor.setPower(0);
     }
 
-    public double getPosition(){
+    public double getMotorPosition(){
         return liftMotor.getCurrentPosition();
     }
 
@@ -64,12 +71,41 @@ public class Lift {
             currentPosition -= 1;
         }
     }
-    public void positionCorrection(){
-        double error = positions[currentPosition] - getPosition();
 
-        liftMotor.setPower(error * 0.0005);
+    public void positionCorrection(){
+        double error = positions[currentPosition] - getMotorPosition();
+
+        liftMotor.setPower(error * 0.001);
     }
     public double getCurrentTargetPosition(){
         return positions[currentPosition];
     }
+
+    public void grabSkystone(){
+        skystoneGrabber.setPosition(GRAB_POSITION);
+    }
+    public void releaseSkystone(){
+        skystoneGrabber.setPosition(RELEASE_POSITION);
+    }
+
+    public void moveInsideRobot(){
+        if(getMotorPosition() > MIN_ROTATE_POSITION)
+            rotator.setPosition(LOAD_POSITION);
+    }
+    public void moveOutsideRobot(){
+        if(getMotorPosition() > MIN_ROTATE_POSITION)
+            rotator.setPosition(STACK_POSITION);
+    }
+
+    public void home(){
+        if(rotator.getPosition() == STACK_POSITION){
+            if(getMotorPosition() < MIN_ROTATE_POSITION) liftMotor.setPower(1);
+            else moveInsideRobot();
+        }
+        if(rotator.getPosition() == LOAD_POSITION && getMotorPosition() > 0){
+            double error = HOME_POSITION - getMotorPosition();
+            liftMotor.setPower(error * 0.001);
+        }
+    }
+
 }

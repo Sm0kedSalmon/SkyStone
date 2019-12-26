@@ -10,7 +10,7 @@ Instead of writing a new method, make a new instance of the PID class.
 */
 public class PID
 {
-    private double target, current, Kp, Ki, Kd, totalError, totalErrorMin, totalErrorMax, lastError, outputValue, previousTime, currentTime;
+    private double target, current, Kp, Ki, Kd, totalError, totalErrorMin, totalErrorMax, currentError, lastError, outputValue, previousTime, currentTime;
 
     //Constructor
     public PID(double Kp, double Ki, double Kd, double totalErrorMin, double totalErrorMax)

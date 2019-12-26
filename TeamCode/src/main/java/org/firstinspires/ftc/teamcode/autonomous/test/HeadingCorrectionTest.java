@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.noimu;
+package org.firstinspires.ftc.teamcode.autonomous.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
-@Autonomous
-public class FoundationRed extends LinearOpMode {
+
+@Autonomous(name = "Heading Correction Test", group="Test")
+public class HeadingCorrectionTest extends LinearOpMode {
     GroverHardware robot = new GroverHardware();
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -16,17 +17,11 @@ public class FoundationRed extends LinearOpMode {
 
     public void runOpMode(){
         robot.init(hardwareMap);
+        robot.dt.resetEncoders();
         waitForStart();
 
-
-        /*robot.dt.strafeToPosition(4, 0.25);
-        robot.dt.driveToPosition(-11, 0.25);
-        robot.dt.strafeToPosition(28, 0.25);
-        robot.foundationGripper.grab();
+        robot.driveAndCorrectAngle(50,0.5,0);
         sleep(500);
-        robot.dt.strafeToPosition(-36, 0.5);
-        robot.foundationGripper.reset();
-        sleep(500);
-        robot.dt.driveToPosition(52, 0.25);*/
+        robot.driveAndCorrectAngle(-50,0.5,0);
     }
 }

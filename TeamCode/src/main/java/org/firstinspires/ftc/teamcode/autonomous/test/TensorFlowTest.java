@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 
-@TeleOp(name = "TensorFlow Test")
+@TeleOp(name = "TensorFlow Test", group="Test")
 
 public class TensorFlowTest extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
