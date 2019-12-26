@@ -99,13 +99,15 @@ public class Lift {
 
     public void home(){
         if(rotator.getPosition() == STACK_POSITION){
-            if(getMotorPosition() < MIN_ROTATE_POSITION) liftMotor.setPower(1);
+            if(getMotorPosition() <= MIN_ROTATE_POSITION) liftMotor.setPower(1);
             else moveInsideRobot();
         }
         if(rotator.getPosition() == LOAD_POSITION && getMotorPosition() > 0){
+            currentPosition = 0;
             double error = HOME_POSITION - getMotorPosition();
             liftMotor.setPower(error * 0.001);
         }
+        
     }
 
 }
