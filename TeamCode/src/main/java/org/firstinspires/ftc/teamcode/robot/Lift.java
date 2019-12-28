@@ -107,7 +107,7 @@ public class Lift {
             double error = HOME_POSITION - getMotorPosition();
             liftMotor.setPower(error * 0.001);
         }
-        
+
     }
 
 }
