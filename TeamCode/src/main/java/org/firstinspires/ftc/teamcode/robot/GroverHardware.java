@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
+import org.firstinspires.ftc.teamcode.motionprofiling.MotionProfileGenerator;
 
 import java.util.Arrays;
 
@@ -256,6 +257,43 @@ public class GroverHardware {
         dt.FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dt.BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dt.BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void timeMotionProfile(double inches){
+        MotionProfileGenerator g = new MotionProfileGenerator(Math.abs(inches/2.0));
+
+        double[] motionProfile = g.generateMotionProfile();
+        double[] positionProfile = g.generatePositionProfile();
+
+        dt.motionProfilePID.reset();
+        dt.resetEncoders();
+        ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        time.reset();
+
+        while(time.milliseconds() < motionProfile.length){
+            double velocity = motionProfile[(int)time.milliseconds()];
+            double power = velocity / g.MAX_VELOCITY;
+
+            double expectedPosition = positionProfile[(int)time.milliseconds()];
+            double currentPosition = dt.getAveragePosition() / dt.TICKS_PER_INCH;
+
+            dt.motionProfilePID.setTarget(expectedPosition);
+            dt.motionProfilePID.updatePID(currentPosition);
+
+            double c = dt.motionProfilePID.getOutput();
+
+            if(inches < 0) power = -power;
+
+            power += c;
+
+            dt.setMotorPower(power,power,power,power);
+            
+            packet.put("Power", power);
+            packet.put("Position", dt.getAveragePosition());
+            dashboard.sendTelemetryPacket(packet);
+        }
+
+        dt.setMotorPower(0,0,0,0);
     }
 
 }

@@ -29,6 +29,7 @@ public class Drivetrain {
     public PID turnToAnglePID = new PID(0.0125,0.00001,0.0004);
     //public PID turnToAngleN90 = new PID(0,0,0);
     public PID teleOpTurnToAnglePID = new PID(0.02,0,0.0015);
+    public PID motionProfilePID = new PID(RobotConstants.MOTION_PROFILE_Kp,RobotConstants.MOTION_PROFILE_Ki,RobotConstants.MOTION_PROFILE_Kd);
 
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
@@ -75,6 +76,11 @@ public class Drivetrain {
         FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public double getAveragePosition(){
+        return Math.abs((FLMotor.getCurrentPosition() + FRMotor.getCurrentPosition()
+                + BLMotor.getCurrentPosition() + BRMotor.getCurrentPosition()) / 4);
     }
 
     public void disableEncoders(){

@@ -20,9 +20,15 @@ public class MotionProfileTest extends LinearOpMode {
         robot.dt.resetEncoders();
         waitForStart();
 
-        robot.driveAndCorrectAngleMotionProfile(30, RobotConstants.TEST_POWER, 0);
+        robot.timeMotionProfile(RobotConstants.DISTANCE);
+
         telemetry.addData("Angle offset", robot.getHeading());
+        telemetry.addData("Distance", robot.dt.FLMotor.getCurrentPosition() / robot.dt.TICKS_PER_INCH);
         telemetry.update();
         sleep(500);
+
+        robot.timeMotionProfile(-RobotConstants.DISTANCE);
+
+
     }
 }

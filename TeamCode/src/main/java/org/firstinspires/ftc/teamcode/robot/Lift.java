@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 
 public class Lift {
     public DcMotor liftMotor;
@@ -30,6 +34,8 @@ public class Lift {
     public static double STACK_POSITION = 0.14;
     public static double MIN_ROTATE_POSITION = 2500;
 
+    public DigitalChannel limitSwitch;
+
     public Lift(HardwareMap ahwMap){
         liftMotor = ahwMap.get(DcMotor.class, "lift");
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -41,6 +47,9 @@ public class Lift {
 
         rotator = ahwMap.get(Servo.class, "rotating_arm");
         rotator.setPosition(LOAD_POSITION);
+
+        limitSwitch = ahwMap.get(DigitalChannel.class, "lift_limit_switch");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void up(){
@@ -98,14 +107,16 @@ public class Lift {
     }
 
     public void home(){
-        if(rotator.getPosition() == STACK_POSITION){
+        /*if(rotator.getPosition() == STACK_POSITION){
             if(getMotorPosition() <= MIN_ROTATE_POSITION) liftMotor.setPower(1);
             else moveInsideRobot();
+        }*/
+        if(rotator.getPosition() == LOAD_POSITION && limitSwitch.getState()){
+            liftMotor.setPower(-1);
         }
-        if(rotator.getPosition() == LOAD_POSITION && getMotorPosition() > 0){
+        if(!limitSwitch.getState()){
             currentPosition = 0;
-            double error = HOME_POSITION - getMotorPosition();
-            liftMotor.setPower(error * 0.001);
+            liftMotor.setPower(0);
         }
 
     }

@@ -1,11 +1,17 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Intake {
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
+
+    public DistanceSensor proxLeft;
 
     public static final double INTAKE_POWER = 0.5;
     public static final double INTAKE_POWER_SLOW = 0.25;
@@ -16,6 +22,8 @@ public class Intake {
 
         intakeLeft.setDirection(DcMotor.Direction.FORWARD);
         intakeRight.setDirection(DcMotor.Direction.REVERSE);
+
+        proxLeft = ahwMap.get(DistanceSensor.class, "proxLeft");
     }
 
     public void on(){
@@ -29,5 +37,8 @@ public class Intake {
     public void off(){
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
+    }
+    public double getDistance(){
+        return proxLeft.getDistance(DistanceUnit.CM);
     }
 }

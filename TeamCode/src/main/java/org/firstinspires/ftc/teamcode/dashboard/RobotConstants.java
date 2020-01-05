@@ -38,4 +38,14 @@ public class RobotConstants {
     public static double TEST_POWER = 0.5;
 
     public static double LOADING_POSITION = 0.81;
+
+    public static double MAX_VELOCITY = 27.5;
+    public static double MAX_ACCELERATION = 10;
+
+    public static double DISTANCE = 20;
+
+    public static double MOTION_PROFILE_Kp = 0.1;
+    public static double MOTION_PROFILE_Ki = 0;
+    public static double MOTION_PROFILE_Kd = 0;
+
 }

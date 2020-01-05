@@ -24,6 +24,9 @@ public class GroverTeleOp extends OpMode {
     ButtonToggle toggleDpadUp = new ButtonToggle();
     ButtonToggle toggleDpadDown = new ButtonToggle();
     ButtonToggle toggleB = new ButtonToggle();
+    ButtonToggle toggleB2 = new ButtonToggle();
+    ButtonToggle toggleLeftBumper = new ButtonToggle();
+    ButtonToggle toggleBack = new ButtonToggle();
 
     //set up ftc dashboard
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -154,25 +157,33 @@ public class GroverTeleOp extends OpMode {
         if(toggleDpadUp.buttonPressed(gamepad2.dpad_up)) robot.lift.stageUp();
         else if(toggleDpadDown.buttonPressed(gamepad2.dpad_down)) robot.lift.stageDown();
 
-        //manual controls
-        if (gamepad2.y && robot.lift.getMotorPosition() < robot.lift.MAX_HEIGHT)
-            robot.lift.up();
-        else if (gamepad2.a && robot.lift.getMotorPosition() > robot.lift.HOME_POSITION)
-            robot.lift.down();
+        //toggle position correction on/off; it's on by default
+        if(!toggleLeftBumper.getState(gamepad2.left_bumper) && !gamepad2.right_bumper) robot.lift.positionCorrection();
+        else{
+            //manual controls
+            if (gamepad2.y && robot.lift.getMotorPosition() < robot.lift.MAX_HEIGHT) robot.lift.up();
+            else if (gamepad2.a && robot.lift.limitSwitch.getState()) robot.lift.down();
+            else robot.lift.stop();
+        }
 
-        //if the lift isn't being controlled manually, it automatically goes to the set position
-        else robot.lift.positionCorrection();
         //reset lift encoders
-        if(gamepad2.left_stick_button)
-            robot.lift.resetEncoder();
+        if(gamepad2.left_stick_button) robot.lift.resetEncoder();
 
         //grabber arm
-        if(toggleB.getState(gamepad2.b)){
+        if(toggleB2.getState(gamepad2.b)){
             robot.lift.moveOutsideRobot();
             telemetry.addLine("Arm Outside Robot");
         }
         else
             robot.lift.moveInsideRobot();
+
+        if(toggleBack.getState(gamepad2.back))
+            robot.lift.grabSkystone();
+        else robot.lift.releaseSkystone();
+
+        if(!robot.lift.limitSwitch.getState()){
+            robot.lift.resetEncoder();
+        }
 
         //Send data to the driver station
         telemetry.addData("Angle: ", robot.getHeading());

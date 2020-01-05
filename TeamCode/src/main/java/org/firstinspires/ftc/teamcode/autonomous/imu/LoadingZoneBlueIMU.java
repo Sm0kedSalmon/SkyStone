@@ -54,7 +54,7 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
             //strafe away from wall
             robot.strafeAndCorrectAngle(23.4, SLOW_SPEED, 0);
             //align with center stone
-            robot.driveAndCorrectAngle(5.0, SLOW_SPEED, 0);
+            robot.driveAndCorrectAngle(6.0, SLOW_SPEED, 0);
             //turn to center skystone
             robot.gyroTurnPID(-90);
             //intake center skystone
@@ -70,7 +70,7 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
             robot.intake.reverse();
             sleep(500);
             //zoom back under skybridge, align with second skystone
-            robot.driveAndCorrectAngle(-62, FAST_SPEED, 0);
+            robot.driveAndCorrectAngle(-63, FAST_SPEED, 0);
             robot.intake.off();
             //turn towards skystone
             robot.gyroTurnPID(-90);

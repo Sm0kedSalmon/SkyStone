@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
-@Autonomous(name = "Regular Drive Test", group="Test")
-public class DriveTest extends LinearOpMode {
+@Autonomous(name = "RPM Test", group="Test")
+public class RPMTest extends LinearOpMode {
     GroverHardware robot = new GroverHardware();
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -21,19 +21,22 @@ public class DriveTest extends LinearOpMode {
         robot.dt.resetEncoders();
         waitForStart();
 
-        ElapsedTime time = new ElapsedTime();
-        time.reset();
-        robot.dt.driveToPosition(40,1);
-        sleep(500);
+        ElapsedTime t = new ElapsedTime();
+        t.reset();
+        robot.dt.setMotorPower(1,1,1,1);
+        while(t.seconds() < 60){
+            telemetry.addData("Time Left", 60 - t.seconds());
+            telemetry.update();
+        }
 
         double distance = robot.dt.getAveragePosition() / robot.dt.TICKS_PER_INCH;
-        double avgVelocity = distance / time.seconds();
+        double avgVelocity = distance / t.seconds();
+        double RPM = robot.dt.getAveragePosition() / robot.dt.TICKS_PER_MOTOR_REV;
 
         telemetry.addData("Distance", distance);
         telemetry.addData("Average Velocity", avgVelocity);
+        telemetry.addData("Average RPM", RPM);
         telemetry.update();
-
-        //turn to center skystone
-        //robot.gyroTurnPID(90);
+        sleep(500);
     }
 }

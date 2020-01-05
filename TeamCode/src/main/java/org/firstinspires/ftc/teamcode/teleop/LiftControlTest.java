@@ -47,13 +47,14 @@ public class LiftControlTest extends OpMode {
         if(toggleDpadUp.buttonPressed(gamepad1.dpad_up)) robot.lift.stageUp();
         else if(toggleDpadDown.buttonPressed(gamepad1.dpad_down)) robot.lift.stageDown();
 
-        //manual controls
-        if (gamepad1.y && robot.lift.getMotorPosition() < robot.lift.MAX_HEIGHT) robot.lift.up();
-        else if (gamepad1.a && robot.lift.getMotorPosition() > robot.lift.HOME_POSITION) robot.lift.down();
-
-        //toggle position correction on/off, it's on by default
-        if(!toggleLeftBumper.getState(gamepad1.left_bumper)) robot.lift.positionCorrection();
-        else robot.lift.stop();
+        //toggle position correction on/off; it's on by default
+        if(!toggleLeftBumper.getState(gamepad1.left_bumper) && !gamepad1.right_bumper) robot.lift.positionCorrection();
+        else{
+            //manual controls
+            if (gamepad1.y && robot.lift.getMotorPosition() < robot.lift.MAX_HEIGHT) robot.lift.up();
+            else if (gamepad1.a && robot.lift.getMotorPosition() > robot.lift.HOME_POSITION) robot.lift.down();
+            else robot.lift.stop();
+        }
 
         //reset lift encoders
         if(gamepad1.left_stick_button) robot.lift.resetEncoder();
@@ -66,9 +67,12 @@ public class LiftControlTest extends OpMode {
         else
             robot.lift.moveInsideRobot();
 
-        if(gamepad1.start)
-            robot.lift.home();
+        if(!robot.lift.limitSwitch.getState()){
+        }
 
+        telemetry.addData("Lift power", robot.lift.liftMotor.getPower());
+        telemetry.addData("Limit switch", robot.lift.limitSwitch.getState());
+        telemetry.update();
         packet.put("Position", robot.lift.getMotorPosition());
         dashboard.sendTelemetryPacket(packet);
     }
