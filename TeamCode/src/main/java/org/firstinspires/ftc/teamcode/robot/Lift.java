@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
+import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 
 public class Lift {
     public DcMotor liftMotor;
@@ -31,7 +33,8 @@ public class Lift {
 
     public Servo rotator;
     public static double LOAD_POSITION = 0.85;
-    public static double STACK_POSITION = 0.14;
+    public static double CAPSTONE_POSITION = 0.8;
+    public static double STACK_POSITION = 0.12;
     public static double MIN_ROTATE_POSITION = 2500;
 
     public DigitalChannel limitSwitch;
@@ -104,6 +107,9 @@ public class Lift {
     public void moveOutsideRobot(){
         if(getMotorPosition() > MIN_ROTATE_POSITION)
             rotator.setPosition(STACK_POSITION);
+    }
+    public void moveToCapstone(){
+        rotator.setPosition(0.85);
     }
 
     public void home(){

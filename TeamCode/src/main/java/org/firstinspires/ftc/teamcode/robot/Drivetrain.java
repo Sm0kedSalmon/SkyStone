@@ -25,12 +25,13 @@ public class Drivetrain {
     public DcMotor BRMotor;
 
     //PID values need to be tuned
-    public PID turnToAnglePIDTest = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
+    //public PID turnToAnglePIDTest = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
+    public PID turnToAnglePIDTest = new PID(0.0125,0.00001,0.0004);
     public PID turnToAnglePID = new PID(0.0125,0.00001,0.0004);
     //public PID turnToAngleN90 = new PID(0,0,0);
     public PID teleOpTurnToAnglePID = new PID(0.02,0,0.0015);
-    public PID motionProfilePID = new PID(RobotConstants.MOTION_PROFILE_Kp,RobotConstants.MOTION_PROFILE_Ki,RobotConstants.MOTION_PROFILE_Kd);
-
+    //public PID motionProfilePID = new PID(RobotConstants.MOTION_PROFILE_Kp,RobotConstants.MOTION_PROFILE_Ki,RobotConstants.MOTION_PROFILE_Kd);
+    public PID motionProfilePID = new PID(0.01,0,0);
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
         FLMotor  = ahwMap.get(DcMotor.class, "FLMotor");

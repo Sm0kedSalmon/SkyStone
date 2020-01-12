@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.noimu;
+package org.firstinspires.ftc.teamcode.autonomous.imu;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -19,14 +19,18 @@ public class FoundationRed extends LinearOpMode {
         waitForStart();
 
 
-        /*robot.dt.strafeToPosition(4, 0.25);
-        robot.dt.driveToPosition(-11, 0.25);
-        robot.dt.strafeToPosition(28, 0.25);
+        robot.dt.strafeToPosition(4, 0.25);
+        robot.driveAndCorrectAngle(RobotConstants.F_ALIGN_SIDEWAYS_DIST, 0.25, 0);
+        robot.dt.strafeToPosition(RobotConstants.F_DRIVE_INTO_FOUND_DIST, 0.25);
         robot.foundationGripper.grab();
         sleep(500);
-        robot.dt.strafeToPosition(-36, 0.5);
+        robot.dt.strafeToPosition(RobotConstants.F_BACK_UP_DIST, 0.75);
+        robot.gyroTurnPID(-90);
         robot.foundationGripper.reset();
         sleep(500);
-        robot.dt.driveToPosition(52, 0.25);*/
+        robot.driveAndCorrectAngle(RobotConstants.ALIGN_WITH_WALL_DIST, 0.75, 0);
+        robot.driveAndCorrectAngle(4, 0.25, 0);
+        robot.strafeAndCorrectAngle(RobotConstants.F_PARK_DIST,0.25, -90);
+
     }
 }

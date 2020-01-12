@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode.autonomous.imu;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbTimeoutException;
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
-import org.firstinspires.ftc.teamcode.easyopencvtest.skystoneDetector;
+import org.firstinspires.ftc.teamcode.easyopencvtest.skystoneDetectorBlue;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -29,14 +28,14 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         phoneCam.openCameraDevice();//open camera
-        phoneCam.setPipeline(new skystoneDetector.StageSwitchingPipeline());//different stages
+        phoneCam.setPipeline(new skystoneDetectorBlue.StageSwitchingPipeline());//different stages
         phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
 
         robot.init(hardwareMap);
 
         while (!isStarted()) {
-            if (skystoneDetector.valLeft == 0) skystonePosition = 0; //left
-            else if (skystoneDetector.valMid == 0) skystonePosition = 1; //center
+            if (skystoneDetectorBlue.valLeft == 0) skystonePosition = 0; //left
+            else if (skystoneDetectorBlue.valMid == 0) skystonePosition = 1; //center
             else skystonePosition = 2; //right
             telemetry.addData("Position", skystonePosition);
             telemetry.update();
@@ -46,13 +45,15 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
 
         //Deploy intake wheels
         robot.intake.on();
-        sleep(100);
+        sleep(200);
         robot.intake.off();
+
+        robot.lift.grabSkystone();
 
         //left
         if (skystonePosition == 0) {
             //strafe away from wall
-            robot.strafeAndCorrectAngle(23.4, SLOW_SPEED, 0);
+            robot.dt.strafeToPosition(23.4, 0.3);
             //align with center stone
             robot.driveAndCorrectAngle(6.0, SLOW_SPEED, 0);
             //turn to center skystone
@@ -94,7 +95,7 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
         //center
         else if (skystonePosition == 1) {
             //strafe away from wall
-            robot.strafeAndCorrectAngle(23.4, SLOW_SPEED, 0);
+            robot.dt.strafeToPosition(23.4, 0.3);
             //align with center stone
             robot.driveAndCorrectAngle(-2.0, SLOW_SPEED, 0);
             //turn to center skystone
@@ -136,7 +137,7 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
         //right
         else {
             //strafe away from wall
-            robot.strafeAndCorrectAngle(23.4, 0.3, 0);
+            robot.dt.strafeToPosition(23.4, 0.3);
             //align with right skystone
             robot.driveAndCorrectAngle(-9.0, 0.3, 0);
             //turn to right skystone
@@ -157,12 +158,12 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
             robot.driveAndCorrectAngle(-70, FAST_SPEED, 0);
             robot.intake.off();
             //turn towards stone TODO: make it so it intakes the right skystone instead of the center stone
-            robot.gyroTurnPID(-100);
+            robot.gyroTurnPID(-135);
             //intake stone
             robot.intake.on();
-            robot.driveAndCorrectAngle(20, SLOW_SPEED, -100);
+            robot.dt.diagonalDriveNW(20, SLOW_SPEED);
             //drive back
-            robot.driveAndCorrectAngle(-17, SLOW_SPEED, -100);
+            robot.dt.diagonalDriveNW(-20, SLOW_SPEED);
             robot.intake.off();
             //turn towards skybridge
             robot.gyroTurnPID(0);

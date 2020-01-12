@@ -5,13 +5,13 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
 @Disabled
-@Autonomous(name = "Motion Profiling Test", group="Test")
-public class MotionProfileTest extends LinearOpMode {
+@Autonomous(name = "Strafe Test", group="Test")
+public class StrafeTest extends LinearOpMode {
     GroverHardware robot = new GroverHardware();
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -22,15 +22,13 @@ public class MotionProfileTest extends LinearOpMode {
         robot.dt.resetEncoders();
         waitForStart();
 
-        robot.timeMotionProfile(RobotConstants.DISTANCE);
-
-        telemetry.addData("Angle offset", robot.getHeading());
-        telemetry.addData("Distance", robot.dt.FLMotor.getCurrentPosition() / robot.dt.TICKS_PER_INCH);
-        telemetry.update();
+        robot.strafeAndCorrectAngle(20,0.3,0);
         sleep(500);
 
-        robot.timeMotionProfile(-RobotConstants.DISTANCE);
+        telemetry.addData("Heading", robot.getHeading());
+        telemetry.update();
 
-
+        //turn to center skystone
+        //robot.gyroTurnPID(90);
     }
 }

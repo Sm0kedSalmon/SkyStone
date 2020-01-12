@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.autonomous.test;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
+@Disabled
 @Autonomous(name = "Heading Correction Test", group="Test")
 public class HeadingCorrectionTest extends LinearOpMode {
     GroverHardware robot = new GroverHardware();

@@ -9,43 +9,46 @@ public class RobotConstants {
     public static double GYRO_TURN_KI = 0.0007;
     public static double GYRO_TURN_KD = 0.0035;
 
+    public static double MOTION_PROFILE_Kp = 0.1;
+    public static double MOTION_PROFILE_Ki = 0;
+    public static double MOTION_PROFILE_Kd = 0;
+
     public static double TARGET_ANGLE = 90;
 
     public static double THRESHOLD = 0.002;
-
-    //foundation auto values
-    /*public static double FOUNDATION_1_DIAGONAL = 30.75;
-    public static double FOUNDATION_2_STRAFE = -30.75;
-    public static double DRIVE_LEFT_DISTANCE = 40;
-    public static double ALIGN_DISTANCE = 12;*/
 
     public static double FIRST_TURN_DIST = 85;
     public static double SECOND_TURN_DIST = 85;
 
     public static double OUTTAKE_TIME = 2000;
-    //lift and CV values, will be set later
-    public static int LIFT_FIRST_STAGE = 0;
-    public static int LIFT_SECOND_STAGE = 0;
-    public static int LIFT_THIRD_STAGE = 0;
-    public static int LIFT_FOURTH_STAGE = 0;
-    public static int LIFT_FIFTH_STAGE = 0;
-    /*public static int OFFSET_X;
-    public static int OFFSET_Y;*/
 
     public static double ACCELERATION_Kp = 0.001;
     public static double MIN_POWER = 0.1;
 
     public static double TEST_POWER = 0.5;
 
-    public static double LOADING_POSITION = 0.81;
 
     public static double MAX_VELOCITY = 27.5;
     public static double MAX_ACCELERATION = 10;
 
     public static double DISTANCE = 20;
 
-    public static double MOTION_PROFILE_Kp = 0.1;
-    public static double MOTION_PROFILE_Ki = 0;
-    public static double MOTION_PROFILE_Kd = 0;
 
+
+    public static double FRONT_GRIPPER_GRAB_POS = 1;
+    public static double BACK_GRIPPER_GRAB_POS = 1;
+
+    public static double OFFSET_X = 0;
+    public static double OFFSET_Y = 0;
+
+    public static double BACK_UP_DISTANCE = -17;
+
+    public static double F_ALIGN_SIDEWAYS_DIST = -16;
+    public static double F_DRIVE_INTO_FOUND_DIST = 30;
+    public static double F_BACK_UP_DIST = -30;
+    public static double F_SLAM_DIST = 4;
+    public static double ALIGN_WITH_WALL_DIST = -30;
+    public static double F_PARK_DIST = -52;
+
+    public static double CAPSTONE_POSITION = 0.95;
 }

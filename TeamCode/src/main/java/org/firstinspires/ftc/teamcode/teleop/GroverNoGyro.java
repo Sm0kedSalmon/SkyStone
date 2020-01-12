@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
 import java.util.Arrays;
 
-@TeleOp
+@TeleOp(name = "Backup TeleOp")
 public class GroverNoGyro extends OpMode {
 
     GroverHardware robot = new GroverHardware();

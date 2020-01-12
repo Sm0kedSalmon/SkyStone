@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
+
 public class FoundationGripper {
     public Servo gripperF;
     public Servo gripperB;
@@ -16,8 +18,8 @@ public class FoundationGripper {
     }
 
     public void grab(){
-        gripperF.setPosition(1);
-        gripperB.setPosition(1);
+        gripperF.setPosition(RobotConstants.FRONT_GRIPPER_GRAB_POS);
+        gripperB.setPosition(RobotConstants.BACK_GRIPPER_GRAB_POS);
     }
 
     public void reset(){

@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.autonomous.noimu;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbTimeoutException;
 import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
-import org.firstinspires.ftc.teamcode.easyopencvtest.skystoneDetector;
+import org.firstinspires.ftc.teamcode.easyopencvtest.skystoneDetectorBlue;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
+@Disabled
 @Autonomous
 public class LoadingZoneBlue extends LinearOpMode {
     public static final double SLOW_SPEED = 0.3;
@@ -28,14 +29,14 @@ public class LoadingZoneBlue extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         phoneCam.openCameraDevice();//open camera
-        phoneCam.setPipeline(new skystoneDetector.StageSwitchingPipeline());//different stages
+        phoneCam.setPipeline(new skystoneDetectorBlue.StageSwitchingPipeline());//different stages
         phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
 
         robot.initNoGyro(hardwareMap);
 
         while(!isStarted()) {
-            if (skystoneDetector.valLeft == 0) skystonePosition = 0; //left
-            else if (skystoneDetector.valMid == 0) skystonePosition = 1; //center
+            if (skystoneDetectorBlue.valLeft == 0) skystonePosition = 0; //left
+            else if (skystoneDetectorBlue.valMid == 0) skystonePosition = 1; //center
             else skystonePosition = 2; //right
             telemetry.addData("Position", skystonePosition);
             telemetry.update();

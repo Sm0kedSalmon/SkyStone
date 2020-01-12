@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 
 import java.util.Arrays;
 
-@TeleOp
+@TeleOp(name = "Grover TeleOp")
 public class GroverTeleOp extends OpMode {
 
     //make an instance of the hardware class
@@ -27,7 +27,7 @@ public class GroverTeleOp extends OpMode {
     ButtonToggle toggleB2 = new ButtonToggle();
     ButtonToggle toggleLeftBumper = new ButtonToggle();
     ButtonToggle toggleBack = new ButtonToggle();
-
+    ButtonToggle toggleDpadLeft = new ButtonToggle();
     //set up ftc dashboard
     FtcDashboard dashboard = FtcDashboard.getInstance();
     TelemetryPacket packet = new TelemetryPacket();
@@ -134,7 +134,7 @@ public class GroverTeleOp extends OpMode {
         //Left bumper activates quarter speed. Otherwise, goes at half speed.
         if (gamepad1.left_bumper)
             robot.dt.setMotorPower(FrontLeftVal / 4, FrontRightVal / 4, BackLeftVal / 4, BackRightVal / 4);
-        else robot.dt.setMotorPower(FrontLeftVal, FrontRightVal, BackLeftVal, BackRightVal);
+        else robot.dt.setMotorPower(FrontLeftVal * 0.75, FrontRightVal * 0.75, BackLeftVal * 0.75, BackRightVal * 0.75);
 
         //reset angle
         if(gamepad1.left_stick_button)
@@ -158,7 +158,7 @@ public class GroverTeleOp extends OpMode {
         else if(toggleDpadDown.buttonPressed(gamepad2.dpad_down)) robot.lift.stageDown();
 
         //toggle position correction on/off; it's on by default
-        if(!toggleLeftBumper.getState(gamepad2.left_bumper) && !gamepad2.right_bumper) robot.lift.positionCorrection();
+        if(toggleLeftBumper.getState(gamepad2.left_bumper)) robot.lift.positionCorrection();
         else{
             //manual controls
             if (gamepad2.y && robot.lift.getMotorPosition() < robot.lift.MAX_HEIGHT) robot.lift.up();
@@ -174,9 +174,15 @@ public class GroverTeleOp extends OpMode {
             robot.lift.moveOutsideRobot();
             telemetry.addLine("Arm Outside Robot");
         }
-        else
-            robot.lift.moveInsideRobot();
+        else{
+            if(toggleDpadLeft.getState(gamepad2.dpad_left))
+                robot.lift.moveToCapstone();
+            else
+                robot.lift.moveInsideRobot();
+        }
 
+
+        //grab skystone
         if(toggleBack.getState(gamepad2.back))
             robot.lift.grabSkystone();
         else robot.lift.releaseSkystone();
