@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.easyopencvtest;
+package easyOpenCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 @Autonomous(name= "opencvSkystoneDetector", group="Sky autonomous")
 @Disabled
-public class skystoneDetectorRed extends LinearOpMode {
+public class skystoneDetectorBlue extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -46,7 +46,7 @@ public class skystoneDetectorRed extends LinearOpMode {
     private static float rectHeight = .6f/8f;
     private static float rectWidth = 1.5f/8f;
 
-    private static float offsetX = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
+    private static float offsetX = 0.5f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float offsetY = 1f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
     private static float[] midPos = {4f/8f+offsetX, 4f/8f+offsetY};;//0 = col, 1 = row

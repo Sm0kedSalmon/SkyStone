@@ -41,10 +41,10 @@ public class GroverTeleOp extends OpMode {
 
     public void init_loop(){
         //choose angle offset because auto finishes in different orientations depending on alliance
-        if(gamepad1.x){
-            angleOffset = 90;
-        }
+        if(gamepad1.x) angleOffset = 90;
+        else if(gamepad1.y) angleOffset = 0;
         else if(gamepad1.b) angleOffset = -90;
+        else if(gamepad1.a) angleOffset = 180;
 
         telemetry.addData("Angle offset", angleOffset);
         telemetry.update();
@@ -88,7 +88,7 @@ public class GroverTeleOp extends OpMode {
         //Pressing X switches from regular mode to field centric mode
         if(toggleX.getState(gamepad1.x)){
             //gets the robot heading and converts it to radians
-            double gyroAngle = robot.getHeading() + angleOffset;
+            double gyroAngle = robot.imu.getHeading() + angleOffset;
             gyroAngle *= (Math.PI / 180);
 
             double joystickAngle = Math.atan2(y, x);
@@ -109,18 +109,6 @@ public class GroverTeleOp extends OpMode {
         double BackLeftVal = r * (y - x) + turn;
         double BackRightVal = r * (y + x) - turn;
 
-        //Holding the A button uses a PID loop to gradually turn to 90 degrees.
-        if(gamepad1.b){
-            double c = robot.dt.gyroPIDCorrection(robot.getHeading(), 90, robot.dt.teleOpTurnToAnglePID);
-            robot.dt.setMotorPower(-c,c,-c,c);
-            FrontLeftVal -= c;
-            FrontRightVal += c;
-            BackLeftVal -= c;
-            BackRightVal += c;
-
-            telemetry.addData("Motor output: ", c);
-        }
-
         //if a wheel power is greater than 1, divides each wheel power by the highest one
         double[] wheelPowers = {FrontRightVal, FrontLeftVal, BackLeftVal, BackRightVal};
         Arrays.sort(wheelPowers);
@@ -134,11 +122,11 @@ public class GroverTeleOp extends OpMode {
         //Left bumper activates quarter speed. Otherwise, goes at half speed.
         if (gamepad1.left_bumper)
             robot.dt.setMotorPower(FrontLeftVal / 4, FrontRightVal / 4, BackLeftVal / 4, BackRightVal / 4);
-        else robot.dt.setMotorPower(FrontLeftVal * 0.75, FrontRightVal * 0.75, BackLeftVal * 0.75, BackRightVal * 0.75);
+        else robot.dt.setMotorPower(FrontLeftVal * 0.85, FrontRightVal * 0.85, BackLeftVal * 0.85, BackRightVal * 0.85);
 
         //reset angle
         if(gamepad1.left_stick_button)
-            angleOffset = robot.getHeading();
+            angleOffset = -robot.imu.getHeading();
 
 
         //GAMEPAD 2 CONTROLS
@@ -192,10 +180,10 @@ public class GroverTeleOp extends OpMode {
         }
 
         //Send data to the driver station
-        telemetry.addData("Angle: ", robot.getHeading());
+        telemetry.addData("Angle: ", robot.imu.getHeading());
         telemetry.update();
 
-        packet.put("Heading", robot.getHeading());
+        packet.put("Heading", robot.imu.getHeading());
 
         dashboard.sendTelemetryPacket(packet);
     }

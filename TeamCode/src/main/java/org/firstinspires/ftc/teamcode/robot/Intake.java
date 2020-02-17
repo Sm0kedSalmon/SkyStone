@@ -38,6 +38,15 @@ public class Intake {
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
     }
+    public void deploy() throws InterruptedException{
+        intakeLeft.setPower(1);
+        intakeRight.setPower(1);
+
+        Thread.sleep(200);
+
+        intakeLeft.setPower(0);
+        intakeRight.setPower(0);
+    }
     public double getDistance(){
         return proxLeft.getDistance(DistanceUnit.CM);
     }

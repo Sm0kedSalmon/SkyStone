@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
+import dashboard.RobotConstants;
 
 public class FoundationGripper {
     public Servo gripperF;

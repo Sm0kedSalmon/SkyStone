@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
 
 public class Lift {
     public DcMotor liftMotor;
@@ -112,6 +107,10 @@ public class Lift {
         rotator.setPosition(0.85);
     }
 
+    public void movetoFoundationDeposit(){
+        rotator.setPosition(1);
+    }
+
     public void home(){
         /*if(rotator.getPosition() == STACK_POSITION){
             if(getMotorPosition() <= MIN_ROTATE_POSITION) liftMotor.setPower(1);
@@ -125,6 +124,10 @@ public class Lift {
             liftMotor.setPower(0);
         }
 
+    }
+
+    public void setCurrentPosition(int position){
+        currentPosition = position;
     }
 
 }

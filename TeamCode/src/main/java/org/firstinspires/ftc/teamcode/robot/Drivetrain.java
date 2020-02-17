@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
+import dashboard.RobotConstants;
 import org.firstinspires.ftc.teamcode.misc.PID;
+import org.firstinspires.ftc.teamcode.motionprofiling.MotionProfileGenerator;
+import org.firstinspires.ftc.teamcode.robot.hardware.IMU;
 
 import java.util.Arrays;
 
@@ -24,14 +29,20 @@ public class Drivetrain {
     public DcMotor BLMotor;
     public DcMotor BRMotor;
 
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    TelemetryPacket packet = new TelemetryPacket();
+
     //PID values need to be tuned
-    //public PID turnToAnglePIDTest = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
-    public PID turnToAnglePIDTest = new PID(0.0125,0.00001,0.0004);
-    public PID turnToAnglePID = new PID(0.0125,0.00001,0.0004);
-    //public PID turnToAngleN90 = new PID(0,0,0);
-    public PID teleOpTurnToAnglePID = new PID(0.02,0,0.0015);
-    //public PID motionProfilePID = new PID(RobotConstants.MOTION_PROFILE_Kp,RobotConstants.MOTION_PROFILE_Ki,RobotConstants.MOTION_PROFILE_Kd);
-    public PID motionProfilePID = new PID(0.01,0,0);
+    public PID turnToAnglePIDTest = new PID(RobotConstants.GYRO_TURN_KP,RobotConstants.GYRO_TURN_KI,RobotConstants.GYRO_TURN_KD);
+    //public PID turnToAnglePIDTest = new PID(RobotConstants.GYRO_TURN_PID[0], RobotConstants.GYRO_TURN_PID[1], RobotConstants.GYRO_TURN_PID[2],
+    //        RobotConstants.GYRO_TURN_PID[3]);
+    //public PID turnToAnglePID = new PID(0.0125,0.00001,0.0004);
+    public PID turnToAnglePID = new PID(0.03,0,0.003);
+    public PID motionProfilePID = new PID(RobotConstants.MOTION_PROFILE_Kp,RobotConstants.MOTION_PROFILE_Ki,RobotConstants.MOTION_PROFILE_Kd,
+            RobotConstants.MOTION_PROFILE_KiMAX);
+
+
+    //public PID motionProfilePID = new PID(0.01,0,0);
     //Initializes motors
     public Drivetrain(HardwareMap ahwMap){
         FLMotor  = ahwMap.get(DcMotor.class, "FLMotor");
@@ -48,10 +59,7 @@ public class Drivetrain {
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //The motors will run without encoders on by default
-        FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        disableEncoders();
 
         //When the robot stops, it will stop immediately
         FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -67,6 +75,13 @@ public class Drivetrain {
         BRMotor.setPower(br);
     }
 
+    public void setMotorPower(double[] powers){
+        FLMotor.setPower(powers[0]);
+        FRMotor.setPower(powers[1]);
+        BLMotor.setPower(powers[2]);
+        BRMotor.setPower(powers[3]);
+    }
+
     public void resetEncoders(){
         FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -77,6 +92,17 @@ public class Drivetrain {
         FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public double[] normalizePowers(double[] powers){
+        Arrays.sort(powers);
+        if(powers[3] > 1){
+            powers[0] /= powers[3];
+            powers[1] /= powers[3];
+            powers[2] /= powers[3];
+            powers[3] /= powers[3];
+        }
+        return powers;
     }
 
     public double getAveragePosition(){
@@ -91,169 +117,27 @@ public class Drivetrain {
         BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    //Autonomous driving, forwards or backwards.
-    public void driveToPosition(double inches, double power){
-        int TICKS = (int)(inches * TICKS_PER_INCH);
+    public void enableEncoders(){
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
-        //Sets the target position.
-        FLMotor.setTargetPosition(FLMotor.getCurrentPosition() + TICKS);
-        FRMotor.setTargetPosition(FRMotor.getCurrentPosition() + TICKS);
-        BLMotor.setTargetPosition(BLMotor.getCurrentPosition() + TICKS);
-        BRMotor.setTargetPosition(BRMotor.getCurrentPosition() + TICKS);
-
+    public void runToPosition(){
         FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Sets the motors to a certain power until the target position is reached.
-        setMotorPower(power,power,power,power);
-
-        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){
-            //correction method
-        }
-
-        setMotorPower(0,0,0,0);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void strafeToPosition(double inches, double power){
-        int TICKS = (int)(inches * TICKS_PER_INCH);
-
-        //Sets the target position.
-        FLMotor.setTargetPosition(FLMotor.getCurrentPosition() + TICKS);
-        FRMotor.setTargetPosition(FRMotor.getCurrentPosition() - TICKS);
-        BLMotor.setTargetPosition(BLMotor.getCurrentPosition() - TICKS);
-        BRMotor.setTargetPosition(BRMotor.getCurrentPosition() + TICKS);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Sets the motors to a certain power until the target position is reached.
-        setMotorPower(power,-power,-power,power);
-
-        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){}
-
-        setMotorPower(0,0,0,0);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void diagonalDriveNE(double inches, double power){
-        int TICKS = (int)(inches * TICKS_PER_INCH);
-
-        //Sets the target position.
-        FLMotor.setTargetPosition(FLMotor.getCurrentPosition() + TICKS);
-        BRMotor.setTargetPosition(BRMotor.getCurrentPosition() + TICKS);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Sets the motors to a certain power until the target position is reached.
-        setMotorPower(power,0,0,power);
-
-        while(FLMotor.isBusy() && BRMotor.isBusy()){}
-
-        setMotorPower(0,0,0,0);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void diagonalDriveNW(double inches, double power){
-        int TICKS = (int)(inches * TICKS_PER_INCH);
-
-        //Sets the target position.
-
-        FRMotor.setTargetPosition(FRMotor.getCurrentPosition() + TICKS);
-        BLMotor.setTargetPosition(BLMotor.getCurrentPosition() + TICKS);
-
-        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Sets the motors to a certain power until the target position is reached.
-        setMotorPower(0,power,power,0);
-
-        while(FRMotor.isBusy() && BLMotor.isBusy()){}
-
-        setMotorPower(0,0,0,0);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void encoderTurn(double angle, double power){
-
-        //Sets the target position.
-        FLMotor.setTargetPosition((int)(FLMotor.getCurrentPosition() - angle * TICKS_PER_DEGREE));
-        FRMotor.setTargetPosition((int)(FRMotor.getCurrentPosition() + angle * TICKS_PER_DEGREE));
-        BLMotor.setTargetPosition((int)(BLMotor.getCurrentPosition() - angle * TICKS_PER_DEGREE));
-        BRMotor.setTargetPosition((int)(BRMotor.getCurrentPosition() + angle * TICKS_PER_DEGREE));
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Sets the motors to a certain power until the target position is reached.
-        setMotorPower(-power,power,-power,power);
-
-        while(FLMotor.isBusy() && FRMotor.isBusy() && BLMotor.isBusy() && BRMotor.isBusy()){}
-
-        setMotorPower(0,0,0,0);
-
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    //Represents 1 loop of a gyro turn PID loop or correction PID loop. Called repeatedly until the target is reached.
-    public double gyroPIDCorrection(double current, double target, PID pid){
-        double error = target - current;
-
-        //if the error is greater than 180, we know it has to cross the 180 -180 boundary, so we switch to a 0-360 scale
-        //this is called an "angle wrap"
-        if(Math.abs(error) > 180){
-            current = (current + 360) % 360;
-            target = (target + 360) % 360;
-        }
-
-        //resets the target in case it's changed
-        pid.setTarget(target);
-
-        //does calculations using PID controller
-        pid.updatePID(current);
-
-        //gets the output value, which is set in the method updatePID()
-        return pid.getOutput();
     }
 
 
 
-    public double[] normalizePowers(double[] powers){
-        Arrays.sort(powers);
-        if(powers[3] > 1){
-            powers[0] /= powers[3];
-            powers[1] /= powers[3];
-            powers[2] /= powers[3];
-            powers[3] /= powers[3];
-        }
-        return powers;
-    }
+
+
+
+
+
 
 
 }

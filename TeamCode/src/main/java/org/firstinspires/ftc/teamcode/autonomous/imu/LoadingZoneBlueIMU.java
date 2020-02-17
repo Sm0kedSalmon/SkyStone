@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous.imu;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
-import org.firstinspires.ftc.teamcode.easyopencvtest.skystoneDetectorBlue;
+import easyOpenCV.skystoneDetectorBlue;
+
+import org.firstinspires.ftc.teamcode.autonomous.HydrofluoricLinearOpMode;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous
-public class LoadingZoneBlueIMU extends LinearOpMode {
+public class LoadingZoneBlueIMU extends HydrofluoricLinearOpMode {
     public static final double SLOW_SPEED = 0.3;
     public static final double FAST_SPEED = 0.75;
     OpenCvCamera phoneCam;
@@ -23,6 +23,7 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
     GroverHardware robot = new GroverHardware();
 
     public void runOpMode() {
+        super.initHardware(robot);
         double skystonePosition = 0;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -44,7 +45,8 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
         waitForStart();
 
         //Deploy intake wheels
-        robot.intake.on();
+        robot.intake.intakeLeft.setPower(1);
+        robot.intake.intakeRight.setPower(1);
         sleep(200);
         robot.intake.off();
 
@@ -53,126 +55,132 @@ public class LoadingZoneBlueIMU extends LinearOpMode {
         //left
         if (skystonePosition == 0) {
             //strafe away from wall
-            robot.dt.strafeToPosition(23.4, 0.3);
+            strafeToPosition(23.4, 0.3);
             //align with center stone
-            robot.driveAndCorrectAngle(6.0, SLOW_SPEED, 0);
+            driveAndCorrectAngle(6.0, SLOW_SPEED, 0);
             //turn to center skystone
-            robot.gyroTurnPID(-90);
+            gyroTurnPID(-90);
             //intake center skystone
             robot.intake.on();
-            robot.driveAndCorrectAngle(20, SLOW_SPEED, -90);
+            driveAndCorrectAngle(20, SLOW_SPEED, -90);
             //drive back
-            robot.driveAndCorrectAngle(-17, SLOW_SPEED, -90);
+            driveAndCorrectAngle(-17, SLOW_SPEED, -90);
             robot.intake.off();
             //turn towards skybridge
-            robot.gyroTurnPID(0);
+            gyroTurnPID(0);
             //drive under skybridge and release skystone
-            robot.driveAndCorrectAngle(39.6, FAST_SPEED, 0);
+            driveAndCorrectAngle(39.6, FAST_SPEED, 0);
             robot.intake.reverse();
             sleep(500);
             //zoom back under skybridge, align with second skystone
-            robot.driveAndCorrectAngle(-63, FAST_SPEED, 0);
+            driveAndCorrectAngle(-63, FAST_SPEED, 0);
             robot.intake.off();
+            //strafe to give robot space
+            strafeAndCorrectAngle(-4, 0.3, 0);
             //turn towards skystone
-            robot.gyroTurnPID(-90);
+            gyroTurnPID(-90);
             //intake skystone
             robot.intake.on();
-            robot.driveAndCorrectAngle(20, SLOW_SPEED, -90);
+            driveAndCorrectAngle(20, SLOW_SPEED, -90);
             //drive back
-            robot.driveAndCorrectAngle(-17, SLOW_SPEED, -90);
+            driveAndCorrectAngle(-17, SLOW_SPEED, -90);
             robot.intake.off();
             //turn towards skybridge
-            robot.gyroTurnPID(0);
+            gyroTurnPID(0);
             //drive under skybridge and release skystone
-            robot.driveAndCorrectAngle(62, FAST_SPEED, 0);
+            driveAndCorrectAngle(62, FAST_SPEED, 0);
             robot.intake.reverse();
             sleep(500);
             //park
-            robot.driveAndCorrectAngle(-13.2, FAST_SPEED, 0);
+            driveAndCorrectAngle(-13.2, FAST_SPEED, 0);
             robot.intake.off();
         }
 
         //center
         else if (skystonePosition == 1) {
             //strafe away from wall
-            robot.dt.strafeToPosition(23.4, 0.3);
+            strafeToPosition(23.4, 0.3);
             //align with center stone
-            robot.driveAndCorrectAngle(-2.0, SLOW_SPEED, 0);
+            driveAndCorrectAngle(-2.0, SLOW_SPEED, 0);
             //turn to center skystone
-            robot.gyroTurnPID(-90);
+            gyroTurnPID(-90);
             //intake center skystone
             robot.intake.on();
-            robot.driveAndCorrectAngle(20, SLOW_SPEED, -90);
+            driveAndCorrectAngle(20, SLOW_SPEED, -90);
             //drive back
-            robot.driveAndCorrectAngle(-17, SLOW_SPEED, -90);
+            driveAndCorrectAngle(-17, SLOW_SPEED, -90);
             robot.intake.off();
             //turn towards skybridge
-            robot.gyroTurnPID(0);
+            gyroTurnPID(0);
             //drive under skybridge and release skystone
-            robot.driveAndCorrectAngle(47.6, FAST_SPEED, 0);
+            driveAndCorrectAngle(47.6, FAST_SPEED, 0);
             robot.intake.reverse();
             sleep(500);
             //zoom back under skybridge, align with second skystone
-            robot.driveAndCorrectAngle(-70, FAST_SPEED, 0);
+            driveAndCorrectAngle(-70, FAST_SPEED, 0);
             robot.intake.off();
+            //strafe to give robot space
+            strafeAndCorrectAngle(-4, 0.3, 0);
             //turn towards skystone
-            robot.gyroTurnPID(-90);
+            gyroTurnPID(-90);
             //intake skystone
             robot.intake.on();
-            robot.driveAndCorrectAngle(20, SLOW_SPEED, -90);
+            driveAndCorrectAngle(20, SLOW_SPEED, -90);
             //drive back
-            robot.driveAndCorrectAngle(-17, SLOW_SPEED, -90);
+            driveAndCorrectAngle(-17, SLOW_SPEED, -90);
             robot.intake.off();
             //turn towards skybridge
-            robot.gyroTurnPID(0);
+            gyroTurnPID(0);
             //drive under skybridge and release skystone
-            robot.driveAndCorrectAngle(70, FAST_SPEED, 0);
+            driveAndCorrectAngle(70, FAST_SPEED, 0);
             robot.intake.reverse();
             sleep(500);
             //park
-            robot.driveAndCorrectAngle(-13.2, FAST_SPEED, 0);
+            driveAndCorrectAngle(-13.2, FAST_SPEED, 0);
             robot.intake.off();
         }
 
         //right
         else {
             //strafe away from wall
-            robot.dt.strafeToPosition(23.4, 0.3);
+            strafeToPosition(23.4, 0.3);
             //align with right skystone
-            robot.driveAndCorrectAngle(-9.0, 0.3, 0);
+            driveAndCorrectAngle(-9.0, 0.3, 0);
             //turn to right skystone
-            robot.gyroTurnPID(-90);
+            gyroTurnPID(-90);
             //intake right skystone
             robot.intake.on();
-            robot.driveAndCorrectAngle(20, 0.3, -90);
+            driveAndCorrectAngle(20, 0.3, -90);
             //drive back
-            robot.driveAndCorrectAngle(-17, 0.3, -90);
+            driveAndCorrectAngle(-17, 0.3, -90);
             robot.intake.off();
             //turn towards skybridge
-            robot.gyroTurnPID(0);
+            gyroTurnPID(0);
             //drive under skybridge and release skystone
-            robot.driveAndCorrectAngle(54.6, FAST_SPEED, 0);
+            driveAndCorrectAngle(54.6, FAST_SPEED, 0);
             robot.intake.reverse();
             sleep(500);
             //zoom back under skybridge, align with second skystone
-            robot.driveAndCorrectAngle(-70, FAST_SPEED, 0);
+            driveAndCorrectAngle(-70, FAST_SPEED, 0);
             robot.intake.off();
-            //turn towards stone TODO: make it so it intakes the right skystone instead of the center stone
-            robot.gyroTurnPID(-135);
+            //strafe to give robot space
+            strafeAndCorrectAngle(-4, 0.3, 0);
+            //turn towards stone
+            gyroTurnPID(-135);
             //intake stone
             robot.intake.on();
-            robot.dt.diagonalDriveNW(20, SLOW_SPEED);
+            diagonalDriveNW(20, SLOW_SPEED);
             //drive back
-            robot.dt.diagonalDriveNW(-20, SLOW_SPEED);
+            diagonalDriveNW(-20, SLOW_SPEED);
             robot.intake.off();
             //turn towards skybridge
-            robot.gyroTurnPID(0);
+            gyroTurnPID(0);
             //drive under skybridge and release skystone
-            robot.driveAndCorrectAngle(70, FAST_SPEED, 0);
+            driveAndCorrectAngle(70, FAST_SPEED, 0);
             robot.intake.reverse();
             sleep(500);
             //park
-            robot.driveAndCorrectAngle(-13.2, FAST_SPEED, 0);
+            driveAndCorrectAngle(-13.2, FAST_SPEED, 0);
             robot.intake.off();
         }
     }

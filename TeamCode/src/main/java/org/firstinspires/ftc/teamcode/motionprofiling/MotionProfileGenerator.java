@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.motionprofiling;
 
-import org.firstinspires.ftc.teamcode.dashboard.RobotConstants;
+import dashboard.RobotConstants;
 
 public class MotionProfileGenerator {
     //constants based on robot
@@ -63,9 +63,11 @@ public class MotionProfileGenerator {
 
     public double[] generatePositionProfile(){
         double[] positions;
-        double maxAccelDistance = MAX_VELOCITY * MAX_VELOCITY / (2 * MAX_ACCELERATION);
+        double maxAccelDistance = MAX_VELOCITY * MAX_VELOCITY / (MAX_ACCELERATION);
         //triangular profile
         if(maxAccelDistance >= totalDistance){
+            int first = 0;
+            int second = 0;
             double adjustedVelocity = Math.sqrt(totalDistance * MAX_ACCELERATION);
             //the length of the graph is t, the height of the graph is vmax, the area of the graph is amax
             double totalTimeSeconds = 2 * Math.sqrt(totalDistance / MAX_ACCELERATION);
@@ -75,36 +77,45 @@ public class MotionProfileGenerator {
                 //accelerating
                 if(currentTimeSeconds < totalTimeSeconds / 2){
                     positions[i] = 0.5 * MAX_ACCELERATION * currentTimeSeconds * currentTimeSeconds;
+                    first++;
                 }
                 //decelerating
                 else {
                     double dt = currentTimeSeconds - totalTimeSeconds / 2;
                     positions[i] = totalDistance / 2 + adjustedVelocity * dt + 0.5 * -MAX_ACCELERATION * dt * dt;
+                    second++;
                 }
             }
+            System.out.println(first + " " + second);
         }
         //trapezoidal profile
         else{
-            double totalTimeSeconds = 2 * MAX_VELOCITY / MAX_ACCELERATION + (totalDistance - maxAccelDistance) / MAX_VELOCITY;
+            double totalTimeSeconds = 2 * (MAX_VELOCITY / MAX_ACCELERATION) + (totalDistance - maxAccelDistance) / MAX_VELOCITY;
             double timeTwoThirds = MAX_VELOCITY / MAX_ACCELERATION + (totalDistance - maxAccelDistance) / MAX_VELOCITY;
             positions = new double[(int)(totalTimeSeconds * 1000)];
 
+            System.out.println("Acceleration distance: " + maxAccelDistance / 2);
+            int first = 0, second = 0, third = 0;
             for(int i = 0; i < positions.length; i++){
                 double currentTimeSeconds = i / 1000.0;
+                //System.out.println(" i: " + i + " ");
                 //accelerating
-                if(currentTimeSeconds < MAX_VELOCITY / MAX_ACCELERATION)
-                    positions[i] = 0.5 * MAX_ACCELERATION * currentTimeSeconds * currentTimeSeconds;
-                    //cruising
-                else if(currentTimeSeconds < MAX_VELOCITY / MAX_ACCELERATION + (totalDistance - maxAccelDistance) / MAX_VELOCITY){
+                if(currentTimeSeconds < MAX_VELOCITY / MAX_ACCELERATION){
+                    positions[i] = 0.5 * MAX_ACCELERATION * (currentTimeSeconds * currentTimeSeconds);
+                }
+
+                //cruising
+                else if(currentTimeSeconds < timeTwoThirds){
                     double dt = currentTimeSeconds - MAX_VELOCITY / MAX_ACCELERATION;
-                    positions[i] = maxAccelDistance / 2 + MAX_VELOCITY * dt;
+                    positions[i] = 0.5 * MAX_VELOCITY * (MAX_VELOCITY / MAX_ACCELERATION) + MAX_VELOCITY * dt;
                 }
 
                 //decelerating
                 else{
                     double dt = currentTimeSeconds - timeTwoThirds;
-                    positions[i] = (totalDistance - maxAccelDistance) + MAX_VELOCITY * dt + 0.5 * -MAX_ACCELERATION * dt * dt;
+                    positions[i] = (totalDistance - maxAccelDistance/2) + MAX_VELOCITY * dt + 0.5 * -MAX_ACCELERATION * dt * dt;
                 }
+                System.out.println(positions[i]);
             }
         }
         return positions;

@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.easyopencvtest;
+package easyOpenCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
@@ -10,7 +9,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Disabled
+
 @Autonomous
 public class scanInitTest extends LinearOpMode {
 

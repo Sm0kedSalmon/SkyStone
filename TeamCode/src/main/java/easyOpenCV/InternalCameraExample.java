@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.easyopencvtest;
+package easyOpenCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

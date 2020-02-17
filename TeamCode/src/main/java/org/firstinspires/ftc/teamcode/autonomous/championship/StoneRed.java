@@ -1,23 +1,22 @@
-package org.firstinspires.ftc.teamcode.autonomous.imu;
+package org.firstinspires.ftc.teamcode.autonomous.championship;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import dashboard.RobotConstants;
-import easyOpenCV.skystoneDetectorRed;
 
 import org.firstinspires.ftc.teamcode.autonomous.HydrofluoricLinearOpMode;
 import org.firstinspires.ftc.teamcode.robot.GroverHardware;
-import org.openftc.easyopencv.OpenCvCamera;
+/*import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvInternalCamera;*/
 
 @Autonomous
-public class LoadingZoneRedIMU extends HydrofluoricLinearOpMode {
+public class StoneRed extends HydrofluoricLinearOpMode {
     public static final double SLOW_SPEED = 0.3;
     public static final double FAST_SPEED = 0.75;
 
-    OpenCvCamera phoneCam;
+    //OpenCvCamera phoneCam;
 
     private final int rows = 640;
     private final int cols = 480;
@@ -27,21 +26,21 @@ public class LoadingZoneRedIMU extends HydrofluoricLinearOpMode {
         super.initHardware(robot);
         double skystonePosition = 0;
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         phoneCam.openCameraDevice();//open camera
         phoneCam.setPipeline(new skystoneDetectorRed.StageSwitchingPipeline());//different stages
-        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
+        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC*/
 
         robot.init(hardwareMap);
 
-        while(!isStarted()) {
+        /*while(!isStarted() && !isStopRequested()) {
             if (skystoneDetectorRed.valLeft == 0) skystonePosition = 2;
             else if (skystoneDetectorRed.valMid == 0) skystonePosition = 1;
             else skystonePosition = 0;
             telemetry.addData("Position", skystonePosition);
             telemetry.update();
-        }
+        }*/
 
         waitForStart();
 
@@ -207,7 +206,7 @@ public class LoadingZoneRedIMU extends HydrofluoricLinearOpMode {
         robot.intake.off();
         robot.driveAndCorrectAngle(-17,SLOW_SPEED);
 
-        telemetry.addData("Heading: ", robot.getHeading());
+        telemetry.addData("Heading: ".getHeading());
 
         //turns and moves under skybridge
         robot.gyroTurnPID(-52, SLOW_SPEED);
@@ -252,7 +251,7 @@ public class LoadingZoneRedIMU extends HydrofluoricLinearOpMode {
         robot.intake.off();
         robot.driveAndCorrectAngle(RobotConstants.QUARRY_5_INTAKEREVERSE,SLOW_SPEED);
 
-        telemetry.addData("Heading: ", robot.getHeading());
+        telemetry.addData("Heading: ".getHeading());
 
         //turns and moves under skybridge
         robot.gyroTurnPID(-RobotConstants.QUARRY_3_TURN, SLOW_SPEED);

@@ -10,23 +10,20 @@ Instead of writing a new method, make a new instance of the PID class.
 */
 public class PID
 {
-    private double target, current, Kp, Ki, Kd, totalError, totalErrorMin, totalErrorMax, currentError, lastError, outputValue, previousTime, currentTime;
+    private double target, current, Kp, Ki, Kd, totalError, KiMax, currentError, lastError, outputValue, previousTime, currentTime;
 
     //Constructor
-    public PID(double Kp, double Ki, double Kd, double totalErrorMin, double totalErrorMax)
+    public PID(double Kp, double Ki, double Kd, double KiMax)
     {
 
         this.Kp = Kp;
         this.Ki = Ki;
         this.Kd = Kd;
-        this.totalErrorMin = totalErrorMin;
-        this.totalErrorMax = totalErrorMax;
+        this.KiMax = KiMax;
 
         current = 0;
         lastError = 0;
         totalError = 0;
-
-        totalError = Range.clip(totalError, totalErrorMin, totalErrorMax);
         previousTime = 0;
     }
     //Constructor without total error constraints
@@ -74,8 +71,8 @@ public class PID
 
     //Gets the difference between the error from the last loop and the error from this loop
     public double errorDifference() {
-        double dt = currentTime - previousTime;
-        return (currentError() - lastError) / dt;
+
+        return (currentError() - lastError);
     }
 
     //Update the P, I, and D values
@@ -85,11 +82,12 @@ public class PID
     }
     public double I()
     {
-        return Ki * totalError();
+        return Range.clip(Ki * totalError(), -KiMax, KiMax);
     }
     public double D()
     {
-        return Kd * errorDifference();
+        double dt = currentTime - previousTime;
+        return Kd * (errorDifference() / dt);
     }
 
     //Accessor methods for variables

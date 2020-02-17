@@ -39,7 +39,7 @@ public class FieldCentricTest extends OpMode {
         double r = Math.hypot(leftstickX, leftstickY);
 
         //gets the robot heading and converts it to radians
-        double gyroAngle = robot.getHeading();
+        double gyroAngle = robot.imu.getHeading();
         gyroAngle *= (Math.PI / 180);
 
 
@@ -74,13 +74,6 @@ public class FieldCentricTest extends OpMode {
         }
 
         robot.dt.setMotorPower(FLPower,FRPower,BLPower,BRPower);
-
-        //PID turn to 90 degrees.
-        if(gamepad1.a){
-            double c = robot.dt.gyroPIDCorrection(robot.getHeading(), 90, robot.dt.turnToAnglePID);
-            robot.dt.setMotorPower(-c,c,-c,c);
-            telemetry.addData("P: ", c);
-        }
 
         //Intake controls
         if(gamepad1.right_bumper) robot.intake.on();
